@@ -1,37 +1,5 @@
-<head>
-    <style>
-        .container{
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            text-align: center;
-        }
-        .persona{
-            width: 200px;
-        }
-        .persona img{
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-        }
-        .button{
-            text-align: center;
-            margin-top: 40px;
-        }
-        .video{
-            background-color: #FF0000;
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            display: inline-block;
-        }
-    </style>
-</head>
 <body>
     <div class="container">
-        <div class="persona">
             <img src="https://github.com/user-attachments/assets/219407fb-1de2-4f1d-b6dc-82bedcba1ba6" alt="Jacob Torres">
             <p><strong>Jacob Torres</strong></p>
         </div>
