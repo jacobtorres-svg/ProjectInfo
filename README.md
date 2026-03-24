@@ -4,7 +4,8 @@
   <p><strong>Jacob Torres</strong></p>
   <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/3105cbc5-bff3-4366-8c04-823ecfcb1136"/>
   <p><strong>Inés Hernández</strong></p>
-  
+  <img width="100" height="100" alt="image" src="![IMG-20250718-WA0003~2](https://github.com/user-attachments/assets/a5e3e5ed-3a20-4b63-90e5-6100aafb32ad)
+"/>
   <p><strong>Leo Puginer</strong></p>
 </div>
 <div class="button">
