@@ -1,0 +1,11 @@
+from airport import *
+airport=Airport("qqqq",41.1749,2.0442)
+IsSchengenAirport(airport.icao_code)
+SetSchengen(airport)
+PrintAirport(airport)
+LoadAirport("Airports.txt")
+SaveSchengenAirports(LoadAirport("Airports.txt"),"Schengen_airports.txt")
+print(AddAirport("Airports.txt",airport))
+print(RemoveAirport("Airports.txt",airport.icao_code))
+PlotAirports(LoadAirport("Airports.txt"))
+MapAirports(LoadAirport("Airports.txt"),"file.kml")
