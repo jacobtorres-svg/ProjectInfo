@@ -5,7 +5,7 @@
   <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/3105cbc5-bff3-4366-8c04-823ecfcb1136"/>
   <p><strong>Inés Hernández</strong></p>
   <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/a5e3e5ed-3a20-4b63-90e5-6100aafb32ad"/>
-  <p><strong>Leo Puginier Pérez</strong></p>
+  <p><strong>Leo Puginier Pérez, Hola</strong></p>
 </div>
 <div class="button">
   <a href="https://drive.google.com/file/d/1xP4IGK5QutixxtmZfPwN_xYWmxbozQIz/view?usp=sharing" class="video">Click to go to the video of our version 1.0!</a>
