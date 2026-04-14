@@ -1,7 +1,5 @@
+from airport import *
 from matplotlib import pyplot
-
-from airport import IsSchengenAirport
-
 
 class Aircraft:  #We open the class for the airport with all the variables we are going to use
     def __init__(self,id,icao_airline,icao_origin,landing):
@@ -87,48 +85,50 @@ print(SaveFlights(LoadArrivals("Arrivals.txt"),"new.txt"))
 
 def PlotAirlines (aircrafts):
     try:
-
+        Vx=[0]*24
+        Vy=[0]*24
         pyplot.bar(Vx,Vy)
     except FileNotFoundError:
-
-        return
+        aircrafts=aircrafts
+    return
 def PlotFlightsType (aircrafts):
     i=0
     airport=aircrafts[i][1]
     she=IsSchengenAirport(airport)
     return
+
 def MapFlights(aircrafts,filename):
+    airports=LoadAirport("Airports.txt")
     new_file=open(filename, "w")
     new_file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
     new_file.write("<Document>\n")
     i=0
     while i<len(aircrafts):
-        new_file.write(f'\t<Placemark> <name>"Route {aircrafts[i][2]}-LEBL"</name>\n')
-        new_file.write("\t\t<LineString>\n")
-        new_file.write("\t\t\t<altitudeMode>clampToGround</altitudeMode>\n")
-        new_file.write("\t\t\t<extrude>1</extrude>\n")
-        new_file.write("\t\t\t<tessellate>1</tessellate>\n")
-        new_file.write("\t\t\t\t<coordinates>\n")
-        new_file.write("\t\t\t\t</coordinates>\n")
-        new_file.write("\t\t</LineString>\n")
-        new_file.write("\t\t<Style>\n")
-        if IsSchengenAirport(aircrafts[i][0])==True:
-            new_file.write("\t\t\t<LabelStyle>\n")
-            new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
-            new_file.write("\t\t\t</LabelStyle>\n")
-            new_file.write("\t\t\t<IconStyle>\n")
-            new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
-            new_file.write("\t\t\t</IconStyle>\n")
-        else:
-            new_file.write("\t\t\t<LabelStyle>\n")
-            new_file.write("\t\t\t\t<color>ff0000ff</color>\n")
-            new_file.write("\t\t\t</LabelStyle>\n")
-            new_file.write("\t\t\t<IconStyle>\n")
-            new_file.write("\t\t\t\t<color>ff0000ff</color>\n")
-            new_file.write("\t\t\t</IconStyle>\n")
-        new_file.write("\t\t</Style>\n")
-        new_file.write(f"\t</Placemark>\n")
+        j=0
+        while j<len(airports):
+            if aircrafts[i][1]==airports[j][0]:
+                new_file.write("\t<Placemark>\n")
+                new_file.write(f'\t\t<name>"Route {aircrafts[i][1]}-LEBL"</name>\n')
+                new_file.write("\t\t<LineString>\n")
+                new_file.write("\t\t\t<altitudeMode>clampToGround</altitudeMode>\n")
+                new_file.write("\t\t\t<extrude>1</extrude>\n")
+                new_file.write("\t\t\t<tessellate>1</tessellate>\n")
+                new_file.write("\t\t\t\t<coordinates>\n")
+                new_file.write("\t\t\t\t\t2.078333,41.296944\n")
+                new_file.write(f"\t\t\t\t\t{airports[j][2]},{airports[j][1]}\n")
+                new_file.write("\t\t\t\t</coordinates>\n")
+                new_file.write("\t\t</LineString>\n")
+                new_file.write("\t\t<Style>\n")
+                new_file.write("\t\t\t<LineStyle>\n")
+                if IsSchengenAirport(airports[j][0])==True:
+                    new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
+                else:
+                    new_file.write("\t\t\t\t<color>ff0000ff</color>\n")
+                new_file.write("\t\t\t</LineStyle>\n")
+                new_file.write("\t\t</Style>\n")
+                new_file.write(f"\t</Placemark>\n")
+            j=j+1
         i=i+1
     new_file.write("</Document>\n")
     new_file.write("</kml>\n")

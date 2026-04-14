@@ -89,7 +89,7 @@ def AddAirport(airports,airport):   #Function to add airports to the list
             end=True
         i=i+1
     if end==False:  #If the condition to end the loop early isn't true it means the loop hasn't found the airport, so it's okay to add it
-        airport=[airport.icao_code, airport.latitude, airport.longitude]
+        airport=[airport.icao_code,airport.latitude,airport.longitude]
         airports.append(airport)
     return airports #The function returns the updated list
 
