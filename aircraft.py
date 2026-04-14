@@ -15,9 +15,21 @@ def LoadArrivals (filename):
         arrive=file.readline() #We ride two lines in one go to skip the title
         while arrive != "":
             info=arrive.split(" ")
-            airline=list(info[3])
-            airline.pop(3)
-            info[3]="".join(airline)
+            #Check that the airports are correct in info[1]
+            if len(list(info[1]))!=4:
+                info[1]="-"
+            #Check that the time are correct in info[2]
+            time=list(info[2])
+            if not (0<=int(time[0])<=2 and time[2]==":" and 0<=int(time[3])<=5):
+                if int(time[0])==2 and int(time[1])>4:
+                    info[2]="-"
+            #Check that the airline are correct in info[3] check the last bit of info!!!
+            if len(list(info[3]))!=4:
+                info[3]="-"
+            else:
+                airline=list(info[3])
+                airline.pop(3)
+                info[3]="".join(airline)
             aircraft=[info[0],info[1],info[2],info[3]]
             aircrafts.append(aircraft)
             arrive=file.readline()
@@ -33,12 +45,13 @@ def PlotArrivals (aircrafts):
     j=0
     while i<len(aircrafts):
         time=list(aircrafts[i][2])
-        if time[0]==start[0] and time[1]==start[1]:
-            Vy[j]=Vy[j]+1
-        else:
-            start=[time[0],time[1]]
-            i=i-1
-            j=j+1
+        if len(time)==5:
+            if time[0]==start[0] and time[1]==start[1]:
+                Vy[j]=Vy[j]+1
+            else:
+                start=[time[0],time[1]]
+                i=i-1
+                j=j+1
         i=i+1
     pyplot.bar(range(24),Vy,label="Arriving aircrafts")
     pyplot.xticks(range(24),rotation=45)
@@ -68,11 +81,12 @@ def SaveFlights(aircrafts, filename):
     return
 print(SaveFlights(LoadArrivals("Arrivals.txt"),"new.txt"))
 #Make a function that lets you change information about the aircrafts (both add and delete) and work on the PlotArrive to make space for empty information so that the Save Flights can take it into account
-def IsSchengenAirport(airport):
-    return
+
 def PlotAirlines (aircrafts):
+    
     return
 def PlotFlightsType (aircrafts):
+    
     return
 def MapFlights(aircrafts):
     return
@@ -83,3 +97,5 @@ def LongDistanceArrivals(aircrafts):
 if __name__ == "__main__":
     aircrafts=LoadArrivals("Arrivals.txt")
     PlotArrivals(aircrafts)
+    print(aircrafts)
+    SaveFlights(aircrafts,"new.txt")
