@@ -1,5 +1,8 @@
 from matplotlib import pyplot
 
+from airport import IsSchengenAirport
+
+
 class Aircraft:  #We open the class for the airport with all the variables we are going to use
     def __init__(self,id,icao_airline,icao_origin,landing):
         self.id=id
@@ -83,12 +86,53 @@ print(SaveFlights(LoadArrivals("Arrivals.txt"),"new.txt"))
 #Make a function that lets you change information about the aircrafts (both add and delete) and work on the PlotArrive to make space for empty information so that the Save Flights can take it into account
 
 def PlotAirlines (aircrafts):
-    
-    return
+    try:
+
+        pyplot.bar(Vx,Vy)
+    except FileNotFoundError:
+
+        return
 def PlotFlightsType (aircrafts):
-    
+    i=0
+    airport=aircrafts[i][1]
+    she=IsSchengenAirport(airport)
     return
-def MapFlights(aircrafts):
+def MapFlights(aircrafts,filename):
+    new_file=open(filename, "w")
+    new_file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+    new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
+    new_file.write("<Document>\n")
+    i=0
+    while i<len(aircrafts):
+        new_file.write(f'\t<Placemark> <name>"Route {aircrafts[i][2]}-LEBL"</name>\n')
+        new_file.write("\t\t<LineString>\n")
+        new_file.write("\t\t\t<altitudeMode>clampToGround</altitudeMode>\n")
+        new_file.write("\t\t\t<extrude>1</extrude>\n")
+        new_file.write("\t\t\t<tessellate>1</tessellate>\n")
+        new_file.write("\t\t\t\t<coordinates>\n")
+        new_file.write("\t\t\t\t</coordinates>\n")
+        new_file.write("\t\t</LineString>\n")
+        new_file.write("\t\t<Style>\n")
+        if IsSchengenAirport(aircrafts[i][0])==True:
+            new_file.write("\t\t\t<LabelStyle>\n")
+            new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
+            new_file.write("\t\t\t</LabelStyle>\n")
+            new_file.write("\t\t\t<IconStyle>\n")
+            new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
+            new_file.write("\t\t\t</IconStyle>\n")
+        else:
+            new_file.write("\t\t\t<LabelStyle>\n")
+            new_file.write("\t\t\t\t<color>ff0000ff</color>\n")
+            new_file.write("\t\t\t</LabelStyle>\n")
+            new_file.write("\t\t\t<IconStyle>\n")
+            new_file.write("\t\t\t\t<color>ff0000ff</color>\n")
+            new_file.write("\t\t\t</IconStyle>\n")
+        new_file.write("\t\t</Style>\n")
+        new_file.write(f"\t</Placemark>\n")
+        i=i+1
+    new_file.write("</Document>\n")
+    new_file.write("</kml>\n")
+    new_file.close()
     return
 def LongDistanceArrivals(aircrafts):
     return
