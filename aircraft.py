@@ -1,3 +1,5 @@
+from fontTools.qu2cu.qu2cu import add_implicit_on_curves
+
 from airport import *
 from matplotlib import pyplot
 
@@ -91,12 +93,33 @@ def PlotAirlines (aircrafts):
     except FileNotFoundError:
         aircrafts=aircrafts
     return
-def PlotFlightsType (aircrafts):
-    i=0
-    airport=aircrafts[i][1]
-    she=IsSchengenAirport(airport)
-    return
+def PlotFlightsType(aircrafts):
+    i = 0
+    countsche = countnosche = 0
+    sche = ['LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG',
+            'EH', 'LH', 'BI','LI', 'EV', 'EY', 'EL', 'LM', 'EN', 'EP',
+            'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS']
+    while i < len(aircrafts):
+        j = 0
+        found = False
+        while j < len(sche) and not found:
+            if aircrafts[i][1][:2] == sche[j]:
+                found = True
+                countsche += 1
+            j += 1
+        if not found:
+            countnosche += 1
+        i += 1
 
+    Vx=["Schengen","No Schengen"]
+    Vy=[countsche,countnosche]
+    pyplot.bar(Vx,Vy,label="Arrivals type")
+    pyplot.xlabel("Type")
+    pyplot.ylabel("Arrivals")
+    pyplot.legend()
+    pyplot.show()
+
+    return
 def MapFlights(aircrafts,filename):
     airports=LoadAirport("Airports.txt")
     new_file=open(filename, "w")
@@ -139,7 +162,5 @@ def LongDistanceArrivals(aircrafts):
 
 # test section
 if __name__ == "__main__":
-    aircrafts=LoadArrivals("Arrivals.txt")
-    PlotArrivals(aircrafts)
-    print(aircrafts)
-    SaveFlights(aircrafts,"new.txt")
+    aircrafts = LoadArrivals("Arrivals.txt")
+    PlotFlightsType(aircrafts)
