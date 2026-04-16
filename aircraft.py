@@ -1,7 +1,6 @@
-from fontTools.qu2cu.qu2cu import add_implicit_on_curves
-
 from airport import *
 from matplotlib import pyplot
+from numpy import *
 
 class Aircraft:  #We open the class for the airport with all the variables we are going to use
     def __init__(self,id,icao_airline,icao_origin,landing):
@@ -85,15 +84,47 @@ def SaveFlights(aircrafts, filename):
 print(SaveFlights(LoadArrivals("Arrivals.txt"),"new.txt"))
 #Make a function that lets you change information about the aircrafts (both add and delete) and work on the PlotArrive to make space for empty information so that the Save Flights can take it into account
 
-def PlotAirlines (aircrafts):
+def PlotAirlines(aircrafts):
     try:
-        Vx=[0]*24
-        Vy=[0]*24
-        pyplot.bar(Vx,Vy)
+        Vx_airlines = []
+        Vy_flights = []
+        if len(aircrafts) == 0:
+            print("Error")
+            return
+        i = 0
+        while i < len(aircrafts):
+            aeroline = aircrafts[i][3]
+            # buscar si ya existe
+            j = 0
+            found = False
+            while j < len(Vx_airlines):
+                if Vx_airlines[j] == aeroline:
+                    Vy_flights[j] += 1
+                    found = True
+                    break
+                j += 1
+            # si no existe, añadirlo
+            if not found:
+                Vx_airlines.append(aeroline)
+                Vy_flights.append(1)
+            i += 1
+
+        pyplot.figure(figsize=(14, 15))
+        pyplot.barh(Vx_airlines, Vy_flights, label="Airline Flights")
+        pyplot.yticks(size=12)
+        pyplot.xlabel("Flights")
+        pyplot.ylabel("Airlines")
+        pyplot.legend()
+        pyplot.tight_layout()
+        pyplot.show()
     except FileNotFoundError:
         aircrafts=aircrafts
     return
+
 def PlotFlightsType(aircrafts):
+    if len(aircrafts) == 0:
+        print("Error")
+        return
     i = 0
     countsche = countnosche = 0
     sche = ['LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG',
@@ -110,7 +141,6 @@ def PlotFlightsType(aircrafts):
         if not found:
             countnosche += 1
         i += 1
-
     Vx=["Schengen","No Schengen"]
     Vy=[countsche,countnosche]
     pyplot.bar(Vx,Vy,label="Arrivals type")
@@ -118,8 +148,8 @@ def PlotFlightsType(aircrafts):
     pyplot.ylabel("Arrivals")
     pyplot.legend()
     pyplot.show()
-
     return
+
 def MapFlights(aircrafts,filename):
     airports=LoadAirport("Airports.txt")
     new_file=open(filename, "w")
@@ -157,10 +187,45 @@ def MapFlights(aircrafts,filename):
     new_file.write("</kml>\n")
     new_file.close()
     return
-def LongDistanceArrivals(aircrafts):
+
+def LongDistanceArrivals(aircrafts,filename):
+    airports = LoadAirport("Airports.txt")
+    new_file = open(filename, "w")
+    new_file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+    new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
+    new_file.write("<Document>\n")
+    i = 0
+    while i < len(aircrafts):
+        j = 0
+        while j < len(airports):
+            if aircrafts[i][1] == airports[j][0]:
+                bcnlat=41.296944
+                bcnlon=2.078333
+                a=sin(radians(airports[j][1]-bcnlat)/2)**2+cos(radians(bcnlat))*cos(radians(airports[j][1]))*sin(radians(bcnlon-airports[j][2])/2)**2
+                c=2*atan2(sqrt(a),sqrt(1-a))
+                d=6371*c
+                print(d)
+                if d>=2000:
+                    new_file.write("\t<Placemark>\n")
+                    new_file.write(f'\t\t<name>"Route {aircrafts[i][1]}-LEBL"</name>\n')
+                    new_file.write("\t\t<LineString>\n")
+                    new_file.write("\t\t\t<altitudeMode>clampToGround</altitudeMode>\n")
+                    new_file.write("\t\t\t<extrude>1</extrude>\n")
+                    new_file.write("\t\t\t<tessellate>1</tessellate>\n")
+                    new_file.write("\t\t\t\t<coordinates>\n")
+                    new_file.write("\t\t\t\t\t2.078333,41.296944\n")
+                    new_file.write(f"\t\t\t\t\t{airports[j][2]},{airports[j][1]}\n")
+                    new_file.write("\t\t\t\t</coordinates>\n")
+                    new_file.write("\t\t</LineString>\n")
+                    new_file.write(f"\t</Placemark>\n")
+            j=j+1
+        i=i+1
+    new_file.write("</Document>\n")
+    new_file.write("</kml>\n")
+    new_file.close()
     return
 
 # test section
 if __name__ == "__main__":
-    aircrafts = LoadArrivals("Arrivals.txt")
+    aircrafts=LoadArrivals("Arrivals.txt")
     PlotFlightsType(aircrafts)

@@ -164,12 +164,49 @@ def ShowAircrafts(): #Function to show all the current information from all the 
         text_area.insert(tk.END,f"{id}\nAirport of origin: {icao_origin}\nTime of landing: {landing}\nAirline code: {icao_airline}\n\n")
     return
 
+def GraphAirlines():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
+    if len(airports)==0:
+        messagebox.showwarning("No Data", "No airports loaded.")
+        return
+    if len(aircrafts)==0:
+        messagebox.showwarning("No Data", "No arrivals loaded.")
+        return
+
+    PlotAirlines(aircrafts)  #We call the PlotAirlines from the airport to do the graph
+    return
+
+def GraphFlightType():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
+    if len(airports)==0:
+        messagebox.showwarning("No Data", "No airports loaded.")
+        return  
+    if len(aircrafts) == 0:
+        messagebox.showwarning("No Data", "No arrivals loaded.")
+        return
+    PlotFlightsType(aircrafts)  #We call the PlotFlightsType from the airport to do the graph
+    return
+
 def ShowMapRoute():  #Function to create the code for the Google Earth to place all the airports
     if len(aircrafts)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
+    if len(aircrafts) == 0:
+        messagebox.showwarning("No Data", "No arrivals loaded.")
+        return
     filename=filedialog.asksaveasfilename(title="Save the route",defaultextension=".kml")
     MapFlights(aircrafts,filename)  #We call the PlotAirports from the airport to do the graph
+    text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
+    return
+
+def ShowMapLongDistance():  #Function to create the code for the Google Earth to place all the airports
+    if len(aircrafts)==0:
+        messagebox.showwarning("No Data", "No airports loaded.")
+        return
+    if len(aircrafts) == 0:
+        messagebox.showwarning("No Data", "No arrivals loaded.")
+        return
+
+    filename=filedialog.asksaveasfilename(title="Save long distance",defaultextension=".kml")
+    LongDistanceArrivals(aircrafts,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     return
 
@@ -196,8 +233,11 @@ def Main(): #The main page where we see all the buttons and possibilities
     tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowAircrafts, **button).pack(pady=5)
     tk.Button(menu_frame,text="💾 Save Schengen Airports to File",command=SaveSchengen,**button).pack(pady=5)
     tk.Button(menu_frame,text="📈 Plot Schengen/No Schengen",command=GraphAirports,**button).pack(pady=5)
+    tk.Button(menu_frame, text="📈 Plot Airlines' flights", command=GraphAirlines, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📈 Plot type of Flight", command=GraphFlightType, **button).pack(pady=5)
     tk.Button(menu_frame,text="📍 Show Airports in Google Earth",command=ShowMap,**button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Routes in Google Earth", command=ShowMapRoute, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📍 Show Long distance flights in Google Earth", command=ShowMapLongDistance, **button).pack(pady=5)
     #The text area to the right
     display_frame=tk.Frame(secondary,padx=20,pady=20)
     display_frame.pack(side="right",fill="both",expand=True)
