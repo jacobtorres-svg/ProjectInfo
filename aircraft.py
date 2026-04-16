@@ -103,7 +103,7 @@ def PlotAirlines(aircrafts):
                     found = True
                     break
                 j += 1
-            # si no existe, añadirlo
+            # si no existe,añadirlo
             if not found:
                 Vx_airlines.append(aeroline)
                 Vy_flights.append(1)
