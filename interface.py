@@ -178,7 +178,7 @@ def GraphAirlines():    #Function to ask for the plot to create a graph of Schen
 def GraphFlightType():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
-        return  
+        return
     if len(aircrafts) == 0:
         messagebox.showwarning("No Data", "No arrivals loaded.")
         return
