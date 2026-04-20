@@ -26,7 +26,7 @@ def IsSchengenAirport(code):    #Function to check if the code of the input-ed a
 
 def SetSchengen(airport):   #Function to ask for the IsSchengenAirport to tell us if it's Schengen, and we add that value to the airport attributes
     airport.sche=IsSchengenAirport(airport.icao_code)
-    return
+    return airport.sche
 
 def PrintAirport(airport):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
     info = (f"ICAO: {airport.icao_code}\n"

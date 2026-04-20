@@ -1,4 +1,3 @@
-from airport import *
 from matplotlib import pyplot
 from numpy import *
 
@@ -143,8 +142,7 @@ def PlotFlightsType(aircrafts):
         return
     return
 
-def MapFlights(aircrafts,filename):
-    airports=LoadAirport("Airports.txt")
+def MapFlights(aircrafts,airports,filename):
     new_file=open(filename, "w")
     new_file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
@@ -167,6 +165,7 @@ def MapFlights(aircrafts,filename):
                 new_file.write("\t\t</LineString>\n")
                 new_file.write("\t\t<Style>\n")
                 new_file.write("\t\t\t<LineStyle>\n")
+                print(type(airports[j].sche))
                 if airports[j].sche==True:
                     new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
                 else:
@@ -181,8 +180,7 @@ def MapFlights(aircrafts,filename):
     new_file.close()
     return
 
-def LongDistanceArrivals(aircrafts,filename):
-    airports = LoadAirport("Airports.txt")
+def LongDistanceArrivals(aircrafts,airports,filename):
     new_file = open(filename, "w")
     new_file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')

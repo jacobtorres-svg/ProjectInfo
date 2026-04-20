@@ -88,10 +88,10 @@ def SetNewSchengen():   #Function to make the current airports get their Schenge
         return
     i=0
     while i<len(airports):
-        SetSchengen(airports[i])    #We call the SetSchengen from the airport to look if the airport is or isn't Schengen
+        airports[i].sche=SetSchengen(airports[i])    #We call the SetSchengen from the airport to look if the airport is or isn't Schengen
         i=i+1
     text_area.insert(tk.END,"Updated Schengen attribute for all airports.\n")
-    return
+    return airports
 
 def ShowAirports(): #Function to show all the current information from all the current airports in the list
     text_area.delete('1.0', tk.END)
@@ -202,7 +202,7 @@ def ShowMapRoute():  #Function to create the code for the Google Earth to place 
         messagebox.showwarning("No Data", "No arrivals loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save the route",defaultextension=".kml")
-    MapFlights(aircrafts,filename)  #We call the PlotAirports from the airport to do the graph
+    MapFlights(aircrafts,airports,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     return
 
@@ -215,7 +215,7 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
         messagebox.showwarning("No Data", "No arrivals loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save long distance",defaultextension=".kml")
-    LongDistanceArrivals(aircrafts,filename)  #We call the PlotAirports from the airport to do the graph
+    LongDistanceArrivals(aircrafts,airports,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     return
 
