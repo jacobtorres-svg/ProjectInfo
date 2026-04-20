@@ -220,7 +220,3 @@ def LongDistanceArrivals(aircrafts,filename):
 # test section
 if __name__ == "__main__":
     aircrafts=LoadArrivals("Arrivals.txt")
-    print(aircrafts)
-    SaveFlights(aircrafts,"newer.txt")
-    PlotArrivals(aircrafts)
-    PlotAirlines(aircrafts)

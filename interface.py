@@ -161,6 +161,17 @@ def ShowAircrafts(): #Function to show all the current information from all the 
         i=i+1
     return
 
+def SaveArrivals(): #Function to save all the Schengen airports into a separate file of our choice
+    text_area.delete('1.0', tk.END)
+    if len(aircrafts)==0:
+        messagebox.showwarning("No Data","No arrivals loaded.")
+        return
+    filename=filedialog.asksaveasfilename(title="Save Arrivals",defaultextension=".txt")
+    if filename:
+        SaveFlights(aircrafts,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
+        text_area.insert(tk.END,f"Schengen airports saved to {filename}\n")
+    return
+
 def GraphAirlines():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
@@ -230,6 +241,7 @@ def Main(): #The main page where we see all the buttons and possibilities
     tk.Button(menu_frame,text="📑 Show Airport Data",command=ShowAirports,**button).pack(pady=5)
     tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowAircrafts, **button).pack(pady=5)
     tk.Button(menu_frame,text="💾 Save Schengen Airports to File",command=SaveSchengen,**button).pack(pady=5)
+    tk.Button(menu_frame, text="💾 Save Arrivals to File", command=SaveArrivals, **button).pack(pady=5)
     tk.Button(menu_frame,text="📈 Plot Schengen/No Schengen",command=GraphAirports,**button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot Airlines' flights", command=GraphAirlines, **button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot type of Flight", command=GraphFlightType, **button).pack(pady=5)
