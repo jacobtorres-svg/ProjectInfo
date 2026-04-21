@@ -74,12 +74,16 @@ def DeleteAirport(principal):   #Function to have the button to ask to delete an
         return
     def DeleteAction(): #Function to actually do the work of deleting the airport
         global airports,airports_file
+        original_lenght=len(airports)
         code=code_entry.get().strip()
         if len(list(code))!=4:
             messagebox.showwarning("Input Error","Incorrect ICAO code.")
         elif code:
             airports=RemoveAirport(LoadAirport(airports_file),code)   #We call the AddAirport from the airport to remove it
-            text_area.insert(tk.END,f"Deleted airport {code}\n")
+            if len(airports)==original_lenght:
+                messagebox.showwarning("Input Error", "That airport doesn't exist.")
+            else:
+                text_area.insert(tk.END,f"Deleted airport {code}\n")
             del_window.destroy()
         else:
             messagebox.showwarning("Input Error","ICAO code required.")
@@ -142,10 +146,13 @@ def SaveSchengen(): #Function to save all the Schengen airports into a separate 
     return
 
 def GraphAirports():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
-    if len(airports)==0:
-        messagebox.showwarning("No Data", "No airports loaded.")
-        return
-    PlotAirports(airports)  #We call the PlotAirports from the airport to do the graph
+    if airports[0].sche==None:
+        messagebox.showwarning("Input Error","No Schengen stablished.")
+    else:
+        if len(airports)==0:
+            messagebox.showwarning("No Data", "No airports loaded.")
+            return
+        PlotAirports(airports)  #We call the PlotAirports from the airport to do the graph
     return
 
 def ShowMap():  #Function to create the code for the Google Earth to place all the airports
@@ -208,13 +215,16 @@ def GraphAirlines():    #Function to ask for the plot to create a graph of Schen
     return
 
 def GraphFlightType():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
-    if len(airports)==0:
-        messagebox.showwarning("No Data", "No airports loaded.")
-        return
-    if len(aircrafts) == 0:
-        messagebox.showwarning("No Data", "No arrivals loaded.")
-        return
-    PlotFlightsType(aircrafts)  #We call the PlotFlightsType from the airport to do the graph
+    if airports[0].sche==None:
+        messagebox.showwarning("Input Error","No Schengen stablished.")
+    else:
+        if len(airports)==0:
+            messagebox.showwarning("No Data", "No airports loaded.")
+            return
+        if len(aircrafts) == 0:
+            messagebox.showwarning("No Data", "No arrivals loaded.")
+            return
+        PlotFlightsType(aircrafts)  #We call the PlotFlightsType from the airport to do the graph
     return
 
 def ShowMapRoute():  #Function to create the code for the Google Earth to place all the airports
@@ -276,7 +286,7 @@ def Main():
     menu_frame = tk.Frame(canvas, padx=20, pady=20, bg="#f0f3f5")
     #make scroll possible
     canvas.create_window((0, 0), window=menu_frame, anchor="nw")
-    menu_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+    menu_frame.bind("<Configure>",lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
     canvas.configure(yscrollcommand=scroll_v.set)
     #buttons
     tk.Label(menu_frame, text="DATABASE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))

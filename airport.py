@@ -73,7 +73,7 @@ def SaveSchengenAirports(airports,filename):    #Function to grab a list of airp
             if airport.sche==True: #We check just the codes of every airport in the list using our first function (IsSchengenAirport)
                 #We put each piece of information in a new vector to add the spaces and change of line before turning into text and putting it in
                 #the file we had previously created
-                vector_airport=[airport.icao_code,"\t",airport.latitude,"\t",airport.longitude,"\n"]
+                vector_airport=[str(airport.icao_code),"\t",str(airport.latitude),"\t",str(airport.longitude),"\n"]
                 new_file.write("".join(vector_airport))
             i=i+1
     else:   #In case there aren't any airports in the list (it's empty) we return an error message
