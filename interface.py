@@ -305,9 +305,9 @@ def Main():
     tk.Button(menu_frame, text="📈 Plot Schengen/Type", command=GraphAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot Airlines' Stats", command=GraphAirlines, **button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot Schengen/Type arrivals", command=GraphFlightType, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📍 Show Airports", command=ShowMapRoute, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📍 Show Airports", command=ShowMap, **button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Routes", command=ShowMapRoute, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📍 Show Long Distance Flights", command=ShowMapRoute, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📍 Show Long Distance Flights", command=ShowMapLongDistance, **button).pack(pady=5)
     #text display
     display_frame = tk.Frame(main_container, padx=20, pady=20, bg="#f0f3f5")
     display_frame.pack(side="right", fill="both", expand=True)
