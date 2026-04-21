@@ -146,12 +146,12 @@ def SaveSchengen(): #Function to save all the Schengen airports into a separate 
     return
 
 def GraphAirports():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
-    if airports[0].sche==None:
+    if len(airports)==0:
+        messagebox.showwarning("No Data", "No airports loaded.")
+        return
+    elif airports[0].sche==None:
         messagebox.showwarning("Input Error","No Schengen stablished.")
     else:
-        if len(airports)==0:
-            messagebox.showwarning("No Data", "No airports loaded.")
-            return
         PlotAirports(airports)  #We call the PlotAirports from the airport to do the graph
     return
 
@@ -215,15 +215,15 @@ def GraphAirlines():    #Function to ask for the plot to create a graph of Schen
     return
 
 def GraphFlightType():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
-    if airports[0].sche==None:
+    if len(airports)==0:
+        messagebox.showwarning("No Data", "No airports loaded.")
+        return
+    elif len(aircrafts)==0:
+        messagebox.showwarning("No Data", "No arrivals loaded.")
+        return
+    elif airports[0].sche==None:
         messagebox.showwarning("Input Error","No Schengen stablished.")
     else:
-        if len(airports)==0:
-            messagebox.showwarning("No Data", "No airports loaded.")
-            return
-        if len(aircrafts) == 0:
-            messagebox.showwarning("No Data", "No arrivals loaded.")
-            return
         PlotFlightsType(aircrafts)  #We call the PlotFlightsType from the airport to do the graph
     return
 
