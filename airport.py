@@ -138,7 +138,7 @@ def MapAirports(airports,filename):  #Function to make the code for the Google E
             new_file.write("\t\t\t<IconStyle>\n")
             new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
             new_file.write("\t\t\t</IconStyle>\n")
-        else:
+        elif airports[i].sche==False:
             new_file.write("\t\t\t<LabelStyle>\n")
             new_file.write("\t\t\t\t<color>ff0000ff</color>\n")
             new_file.write("\t\t\t</LabelStyle>\n")

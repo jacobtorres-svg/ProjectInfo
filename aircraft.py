@@ -168,7 +168,7 @@ def MapFlights(aircrafts,airports,filename):
                 print(type(airports[j].sche))
                 if airports[j].sche==True:
                     new_file.write("\t\t\t\t<color>ff00ff00</color>\n")
-                else:
+                elif airports[j].sche==False:
                     new_file.write("\t\t\t\t<color>ff0000ff</color>\n")
                 new_file.write("\t\t\t</LineStyle>\n")
                 new_file.write("\t\t</Style>\n")
