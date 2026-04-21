@@ -269,8 +269,15 @@ def Main():
     #main interface
     main_container = tk.Frame(secondary, bg="#f0f3f5")
     main_container.pack(fill="both", expand=True)
-    menu_frame = tk.Frame(main_container, padx=20, pady=20, bg="#f0f3f5")
-    menu_frame.pack(side="left", fill="y")
+    canvas = tk.Canvas(main_container, bg="#f0f3f5", width=280, highlightthickness=0)
+    canvas.pack(side="left", fill="y")
+    scroll_v = tk.Scrollbar(main_container, orient="vertical", command=canvas.yview)
+    scroll_v.pack(side="left", fill="y")
+    menu_frame = tk.Frame(canvas, padx=20, pady=20, bg="#f0f3f5")
+    #make scroll possible
+    canvas.create_window((0, 0), window=menu_frame, anchor="nw")
+    menu_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+    canvas.configure(yscrollcommand=scroll_v.set)
     #buttons
     tk.Label(menu_frame, text="DATABASE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📂 Load Airports", command=LoadAirports, **button).pack(pady=5)
@@ -279,7 +286,7 @@ def Main():
     tk.Button(menu_frame, text="➕ Add Airport", command=lambda: AddNewAirport(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="🗑️ Delete Airport", command=lambda: DeleteAirport(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="✈️ Set Schengen Attribute", command=SetNewSchengen, **button).pack(pady=5)
-    tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10,0))
+    tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📑 Show Airport Data", command=ShowAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowAircrafts, **button).pack(pady=5)
     tk.Button(menu_frame, text="💾 Save Schengen to File", command=SaveSchengen, **button).pack(pady=5)
