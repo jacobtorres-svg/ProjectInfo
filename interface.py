@@ -227,7 +227,7 @@ def GraphFlightType():    #Function to ask for the plot to create a graph of Sch
         PlotFlightsType(aircrafts)  #We call the PlotFlightsType from the airport to do the graph
     return
 
-def ShowMapRoute():  #Function to create the code for the Google Earth to place all the airports
+def ShowMapRoute():  #Function to create the code for the Google Earth to place all the flight routes
     text_area.delete('1.0', tk.END)
     if len(aircrafts)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
@@ -240,7 +240,7 @@ def ShowMapRoute():  #Function to create the code for the Google Earth to place 
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     return
 
-def ShowMapLongDistance():  #Function to create the code for the Google Earth to place all the airports
+def ShowMapLongDistance():  #Function to create the code for the Google Earth to place all the long distance flights
     text_area.delete('1.0', tk.END)
     if len(aircrafts)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
