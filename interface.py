@@ -200,7 +200,7 @@ def SaveArrivals(): #Function to save all the Schengen airports into a separate 
     filename=filedialog.asksaveasfilename(title="Save Arrivals",defaultextension=".txt")
     if filename:
         SaveFlights(aircrafts,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
-        text_area.insert(tk.END,f"Schengen airports saved to {filename}\n")
+        text_area.insert(tk.END,f"Arrivals saved to {filename}\n")
     return
 
 def GraphAirlines():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
