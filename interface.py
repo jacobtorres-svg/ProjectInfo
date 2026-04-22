@@ -1,3 +1,4 @@
+from LEBL import *
 from airport import *
 from aircraft import *
 import tkinter as tk
@@ -253,6 +254,33 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     return
 
+#---LEBL SECTION---
+terminals_file=None  #We put the aircrafts file as None so the default state is without any information, and we can add whatever file we want
+gate_info=[] #We put the airports as a list, just like it was in the aircrafts
+
+def LoadTerminals():
+    text_area.delete('1.0', tk.END)
+    global terminals_file, gate_info
+    filename=filedialog.askopenfilename(title="Select terminal file")  #Similar to putting a variable=input(), we ask for the file, but searching in our files
+    if filename:
+        gate_info=GateOccupancy(LoadAirportStructure("Terminals.txt"))  #We call the LoadTerminal from the airport to give us the list we knew (and still know here) as airports
+        terminals_file=filename  # We clarify, globally, that now there's a file for the airports
+        text_area.insert(tk.END, f"Loaded terminals from {filename}\n")
+    return
+
+def ShowGateInfo(): #Function to show all the current information from all the current airports in the list
+    text_area.delete('1.0', tk.END)
+    if len(gate_info)==0:
+        messagebox.showwarning("No Data","No aircrafts loaded.")
+        return
+    text_area.insert(tk.END,"---Gate Information---\n")
+    i=0
+    while i<len(gate_info):
+        info=PrintGateInfo(gate_info[i])
+        text_area.insert(tk.END,info)
+        i=i+1
+    return
+
 #---INTERFACE AESTHETICS---
 def CenterWindow(window):
     window.update_idletasks()
@@ -265,7 +293,6 @@ def CenterWindow(window):
 
 text_area=None  # We start with an empty text interface
 button = {"bg": "#2c3e50","fg": "#f0f3f5","font":("Segoe UI", 10, "bold"),"relief": "flat","padx": 10,"pady": 5,"width": 30,"cursor": "hand2"}
-
 
 def Main():
     global text_area, secondary
@@ -292,6 +319,7 @@ def Main():
     tk.Label(menu_frame, text="DATABASE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📂 Load Airports", command=LoadAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📂 Load Arrivals", command=LoadAricrafts, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📂 Load Terminals", command=LoadTerminals, **button).pack(pady=5)
     tk.Label(menu_frame, text="EDIT DATA", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="➕ Add Airport", command=lambda: AddNewAirport(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="🗑️ Delete Airport", command=lambda: DeleteAirport(secondary), **button).pack(pady=5)
@@ -299,6 +327,7 @@ def Main():
     tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📑 Show Airport Data", command=ShowAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowAircrafts, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📑 Show Gate Information", command=ShowGateInfo, **button).pack(pady=5)
     tk.Button(menu_frame, text="💾 Save Schengen to File", command=SaveSchengen, **button).pack(pady=5)
     tk.Button(menu_frame, text="💾 Save Arrivals to File", command=SaveArrivals, **button).pack(pady=5)
     tk.Label(menu_frame, text="ANALYSIS & MAPS", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w", pady=(10, 0))

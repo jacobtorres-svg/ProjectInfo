@@ -76,8 +76,33 @@ def LoadAirportStructure (filename):
         return
 
 def  GateOccupancy (bcn):
+    all_info=[]
+    i=0
+    while i<len(bcn.list_terminal): #[LEBL,TERMINAL]
+        terminal=bcn.list_terminal[i]   #We look at the TERMINAL
+        j=0
+        while j<len(terminal.list_obj): #[LEBL,[T1,BOARDING AREA,abcd]]
+            area=terminal.list_obj[j]   #We look at the BOARDING AREA
+            k=0
+            while k<len(area.gate_list):    #[LEBL,[T1,["Area A",schengen,GATE],abcd]]
+                gate=area.gate_list[k]  #We look at GATE
+                if gate.occupied:
+                    status="Occupied"
+                else:
+                    status="Free"
+                code=gate.id
+                list_gates=[f"Name: {gate.name}",f"Code: {code}",f"Status: {status}"]
+                all_info.append(list_gates)
+                k+=1
+            j+=1
+        i+=1
+    return all_info
 
-    return
+def PrintGateInfo(all_info):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
+    info =all_info
+    return info
+
+print(PrintGateInfo(GateOccupancy(LoadAirportStructure("Terminals.txt"))))
 
 def IsAirlineInTerminal (terminal, name):
     return
@@ -107,3 +132,5 @@ if __name__ == "__main__":
     LoadAirlines(mi_terminal, "T1")
     print(f"Terminal: {mi_terminal.name}")
     print(f"Codes: {mi_terminal.list_code}")
+    print(GateOccupancy(LoadAirportStructure("Terminals.txt")))
+
