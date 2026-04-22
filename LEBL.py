@@ -19,7 +19,7 @@ class Gate:
     def __init__(self,name):
         self.name=name  #name of the gate (ex. "T1AG1")
         self.occupancy=None #status of occupancy
-        self.id=""  #ID of the aircraft in the case of occupancy=True
+        self.id="-"  #ID of the aircraft in the case of occupancy=True
 
 def SetGates (area, init_gate, end_gate, prefix):
     if end_gate<=init_gate:
@@ -91,7 +91,9 @@ def  GateOccupancy (bcn):
                 else:
                     status="Free"
                 code=gate.id
-                list_gates=[f"Name: {gate.name}",f"Code: {code}",f"Status: {status}"]
+                list_gates=(f"Name: {gate.name}\n"
+                            f"Code: {code}\n"
+                            f"Status: {status}\n\n")
                 all_info.append(list_gates)
                 k+=1
             j+=1
@@ -99,7 +101,7 @@ def  GateOccupancy (bcn):
     return all_info
 
 def PrintGateInfo(all_info):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
-    info =all_info
+    info=all_info
     return info
 
 print(PrintGateInfo(GateOccupancy(LoadAirportStructure("Terminals.txt"))))
