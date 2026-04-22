@@ -1,28 +1,28 @@
 class BarcelonaAP:
     def __init__(self,code):
-        self.code=code
-        self.list_terminal=[]
+        self.code=code  #code of the airport (LEBL)
+        self.list_terminal=[]   #list composed of the class Terminal
 
 class Terminal:
     def __init__(self,name):
-        self.name=name
-        self.list_obj=[]
-        self.list_code=[]
+        self.name=name  #name of the terminal
+        self.list_obj=[]    #list composed of the class BoardingArea
+        self.list_code=[]   #airlines codes
 
 class BoardingArea:
     def __init__(self,name,sche):
-        self.name=name
-        self.sche=sche
-        self.gate_list=[]
+        self.name=name  #name of the area (ex. "Area A")
+        self.sche=sche  #if it's schengen
+        self.gate_list=[]   #list composed of the class Gate
 
 class Gate:
     def __init__(self,name):
-        self.name=name
-        self.occupancy=None
-        self.id=""
+        self.name=name  #name of the gate (ex. "T1AG1")
+        self.occupancy=None #status of occupancy
+        self.id=""  #ID of the aircraft in the case of occupancy=True
 
 def SetGates (area, init_gate, end_gate, prefix):
-    if end_gate <= init_gate:
+    if end_gate<=init_gate:
         return -1
     i=init_gate
     while init_gate<=i<=end_gate:
@@ -40,7 +40,6 @@ def LoadAirlines (terminal, t_name):
     while terminal_info!="":
         info=terminal_info.split("\t")
         letters=info[1].strip()
-        terminal.list_obj.append(info[0])
         terminal.list_code.append(letters)
         terminal_info=file.readline()
     file.close()
@@ -48,44 +47,36 @@ def LoadAirlines (terminal, t_name):
 
 def LoadAirportStructure (filename):
     try:
-        file = open(filename, "r")
-        linea_bcn = file.readline().split()
-        if not linea_bcn:
+        file=open(filename, "r")
+        info=file.readline().split()
+        if not info:
             file.close()
             return -1
-        bcn = BarcelonaAP(linea_bcn[0])
-        num_terminals = int(linea_bcn[1])
+        bcn=BarcelonaAP(info[0])
+        num_terminals=int(info[1])
         i = 0
         while i < num_terminals:
-            linea_term = file.readline().split()
-            t_name = linea_term[1]
-            num_areas = int(linea_term[2])
-            terminal = Terminal(t_name)
+            term=file.readline().split()
+            t_name=term[1]
+            num_areas=int(term[2])
+            terminal=Terminal(t_name)
             LoadAirlines(terminal, t_name)
-            j = 0
-            while j < num_areas:
-                linea_area = file.readline().split()
-                a_name = linea_area[0] + " " + linea_area[1]
-                a_sche = linea_area[2]
-                init_g = int(linea_area[4])
-                end_g = int(linea_area[6])
-                area = BoardingArea(a_name, a_sche)
-                prefix = t_name + linea_area[1]
-                SetGates(area, init_g, end_g, prefix)
+            j=0
+            while j<num_areas:
+                info_area=file.readline().split()
+                area=BoardingArea(info_area[0]+" "+info_area[1],info_area[2])
+                SetGates(area,int(info_area[4]),int(info_area[6]),t_name+info_area[1])
                 terminal.list_obj.append(area)
-                j += 1
+                j=j+1
             bcn.list_terminal.append(terminal)
-            i += 1
+            i=i+1
         file.close()
         return bcn
     except FileNotFoundError:
-        return -1
-    except Exception:
-        return -2
+        return
 
-print(LoadAirportStructure ("Terminals.txt").list_terminal)
+def  GateOccupancy (bcn):
 
-def GateOccupancy (bcn):
     return
 
 def IsAirlineInTerminal (terminal, name):
@@ -98,6 +89,7 @@ def AssignGate (bcn, aircraft):
     return
 
 if __name__ == "__main__":
+    print(LoadAirportStructure("Terminals.txt"))
     test_area=BoardingArea("Area A", "Schengen")
     inicio=1
     fin=11
@@ -114,5 +106,4 @@ if __name__ == "__main__":
     mi_terminal = Terminal("T1")
     LoadAirlines(mi_terminal, "T1")
     print(f"Terminal: {mi_terminal.name}")
-    print(f"Names: {mi_terminal.list_obj}")
     print(f"Codes: {mi_terminal.list_code}")
