@@ -168,7 +168,7 @@ def ShowMap():  #Function to create the code for the Google Earth to place all t
 
 #---AIRPORT SECTION---
 aircrafts_file=None  #We put the aircrafts file as None so the default state is without any information, and we can add whatever file we want
-aircrafts=[] #We put the airports as a list, just like it was in the aircrafts
+aircrafts=[] #We put the aircrafts as a list, just like it was in the aircraft
 
 def LoadAricrafts():
     text_area.delete('1.0', tk.END)
@@ -255,8 +255,8 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
     return
 
 #---LEBL SECTION---
-terminals_file=None  #We put the aircrafts file as None so the default state is without any information, and we can add whatever file we want
-gate_info=[] #We put the airports as a list, just like it was in the aircrafts
+terminals_file=None  #We put the terminals file as None so the default state is without any information, and we can add whatever file we want
+gate_info=[] #We put the gate information as a list, just like it was in the LEBL
 
 def LoadTerminals():
     text_area.delete('1.0', tk.END)
