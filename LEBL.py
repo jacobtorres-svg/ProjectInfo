@@ -100,11 +100,10 @@ def  GateOccupancy (bcn):
         i+=1
     return all_info
 
-def PrintGateInfo(all_info):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
+def PrintGateInfo(all_info):
     info=all_info
     return info
 
-print(PrintGateInfo(GateOccupancy(LoadAirportStructure("Terminals.txt"))))
 
 def IsAirlineInTerminal (terminal, name):
     return
