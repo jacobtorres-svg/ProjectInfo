@@ -22,13 +22,10 @@ def LoadArrivals (filename):
             if not (0<=int(time[0])<=2 and time[2]==":" and 0<=int(time[3])<=5):
                 if int(time[0])==2 and int(time[1])>4:
                     info[2]="-"
-            airline=list(info[3])
-            if "\n" in airline:
-                airline.remove("\n")
-                info[3]="".join(airline)
-            if len(info[3])!=3:
-                info[3]="-"
-            aircraft_class=Aircraft(info[0],info[1],info[2],info[3])
+            airline=info[3].strip()
+            if len(airline)!=3:
+                airline="-"
+            aircraft_class=Aircraft(info[0],info[1],info[2],airline)
             aircrafts.append(aircraft_class)
             arrive=file.readline()
         file.close()

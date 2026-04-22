@@ -1,21 +1,21 @@
-class BarcelonaAP:  #We open the class for the airport with all the variables we are going to use
+class BarcelonaAP:
     def __init__(self,code):
         self.code=code
         self.list_terminal=[]
 
-class Terminal:  #We open the class for the airport with all the variables we are going to use
+class Terminal:
     def __init__(self,name):
         self.name=name
         self.list_obj=[]
         self.list_code=[]
 
-class BoardingArea:  #We open the class for the airport with all the variables we are going to use
+class BoardingArea:
     def __init__(self,name,sche):
         self.name=name
         self.sche=sche
         self.gate_list=[]
 
-class Gate:  #We open the class for the airport with all the variables we are going to use
+class Gate:
     def __init__(self,name):
         self.name=name
         self.occupancy=None
@@ -39,17 +39,51 @@ def LoadAirlines (terminal, t_name):
     terminal_info=file.readline()
     while terminal_info!="":
         info=terminal_info.split("\t")
-        letters=info[1]
-        if letters[3]=="\n":
-            info[1]="".join(letters[0:3])
+        letters=info[1].strip()
         terminal.list_obj.append(info[0])
-        terminal.list_code.append(info[1])
+        terminal.list_code.append(letters)
         terminal_info=file.readline()
     file.close()
     return
 
 def LoadAirportStructure (filename):
-    return
+    try:
+        file = open(filename, "r")
+        linea_bcn = file.readline().split()
+        if not linea_bcn:
+            file.close()
+            return -1
+        bcn = BarcelonaAP(linea_bcn[0])
+        num_terminals = int(linea_bcn[1])
+        i = 0
+        while i < num_terminals:
+            linea_term = file.readline().split()
+            t_name = linea_term[1]
+            num_areas = int(linea_term[2])
+            terminal = Terminal(t_name)
+            LoadAirlines(terminal, t_name)
+            j = 0
+            while j < num_areas:
+                linea_area = file.readline().split()
+                a_name = linea_area[0] + " " + linea_area[1]
+                a_sche = linea_area[2]
+                init_g = int(linea_area[4])
+                end_g = int(linea_area[6])
+                area = BoardingArea(a_name, a_sche)
+                prefix = t_name + linea_area[1]
+                SetGates(area, init_g, end_g, prefix)
+                terminal.list_obj.append(area)
+                j += 1
+            bcn.list_terminal.append(terminal)
+            i += 1
+        file.close()
+        return bcn
+    except FileNotFoundError:
+        return -1
+    except Exception:
+        return -2
+
+print(LoadAirportStructure ("Terminals.txt").list_terminal)
 
 def GateOccupancy (bcn):
     return
