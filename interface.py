@@ -25,7 +25,8 @@ def AddNewAirport(principal): #Function to have the button to ask to add a new a
         messagebox.showwarning("No Data","No airports loaded.")
         return
     def AddAction():    #Function to actually do the work of adding the new airport
-        global airports,airports_file
+        global airports
+        original_length=len(airports)
         #We establish the code, latitude and longitude by input, and we make sure to leave out unnecessary data (ex. extra spaces at the end) with .strip()
         code=code_entry.get().strip()
         lat=lat_entry.get().strip()
@@ -34,10 +35,12 @@ def AddNewAirport(principal): #Function to have the button to ask to add a new a
             if len(list(code))!=4:
                 messagebox.showwarning("Input Error","Incorrect ICAO code.")
             elif code and lat and lon:
-                airport=Airport(code,float(lat),float(lon))
-                airports=AddAirport(LoadAirport(airports_file),airport)  #We call the AddAirport from the airport to add it
-                text_area.insert(tk.END,f"Added airport {code}\n")
-                add_window.destroy()
+                airports=AddAirport(airports,Airport(code,float(lat),float(lon)))  #We call the AddAirport from the airport to add it
+                if len(airports)==original_length:
+                    messagebox.showwarning("Input Error", "That airport already exists.")
+                else:
+                    text_area.insert(tk.END,f"Added airport {code}\n")
+                    add_window.destroy()
             else:   #If we don't have all the information we asked for we pop up an error message
                 messagebox.showwarning("Input Error","All fields are required.")
         except ValueError:  #In case of an error in the values (like inputting letters in tha latitude or longitude) show an error message
@@ -74,14 +77,14 @@ def DeleteAirport(principal):   #Function to have the button to ask to delete an
         messagebox.showwarning("No Data","No airports loaded.")
         return
     def DeleteAction(): #Function to actually do the work of deleting the airport
-        global airports,airports_file
-        original_lenght=len(airports)
+        global airports
+        original_length=len(airports)
         code=code_entry.get().strip()
         if len(list(code))!=4:
             messagebox.showwarning("Input Error","Incorrect ICAO code.")
         elif code:
-            airports=RemoveAirport(LoadAirport(airports_file),code)   #We call the AddAirport from the airport to remove it
-            if len(airports)==original_lenght:
+            airports=RemoveAirport(airports,code)   #We call the AddAirport from the airport to remove it
+            if len(airports)==original_length:
                 messagebox.showwarning("Input Error", "That airport doesn't exist.")
             else:
                 text_area.insert(tk.END,f"Deleted airport {code}\n")
@@ -204,6 +207,105 @@ def SaveArrivals(): #Function to save all the Schengen airports into a separate 
         text_area.insert(tk.END,f"Arrivals saved to {filename}\n")
     return
 
+def AddNewAircraft(principal): #Function to have the button to ask to add a new airport
+    text_area.delete('1.0', tk.END)
+    if len(aircrafts)==0:
+        messagebox.showwarning("No Data","No aircrafts loaded.")
+        return
+    def AddAction():
+        global aircrafts
+        original_length=len(aircrafts)
+        id=id_entry.get().strip().upper()
+        origin=origin_entry.get().strip().upper()
+        landing=landing_entry.get().strip()
+        airline=airline_entry.get().strip().upper()
+        if len(id)<3:
+            messagebox.showwarning("Input Error", "Incorrect ID.")
+        elif len(origin)!=4:
+            messagebox.showwarning("Input Error", "Origin ICAO must be 4 characters.")
+        elif ":" not in landing or len(landing)!=5:
+            messagebox.showwarning("Input Error", "Landing time must be HH:MM.")
+        elif len(airline)!=3:
+            messagebox.showwarning("Input Error", "Airline code must be 3 characters.")
+        elif id and origin and landing and airline:
+            aircrafts=AddAircraft(aircrafts,Aircraft(id,origin,landing,airline))
+            if len(aircrafts)==original_length:
+                messagebox.showwarning("Input Error", "That arrival already exists.")
+            else:
+                text_area.insert(tk.END, f"Added arrival from {origin} at {landing}\n")
+                add_window.destroy()
+        else:
+            messagebox.showwarning("Input Error", "All fields are required.")
+    #We decorate the interface
+    add_window = tk.Toplevel(principal, padx=30, pady=30, bg="#f0f3f5")
+    add_window.title("Add Arrival")
+    #main interface
+    main_frame = tk.Frame(add_window, bg="#f0f3f5")
+    main_frame.pack(expand=True)
+    #repetitive style
+    lbl_style = {"bg": "#f0f3f5", "font": ("Segoe UI", 10)}
+    entry_style = {"font": ("Segoe UI", 10), "justify": "center"}
+    #input of information
+    tk.Label(main_frame, text="Aircraft ID (e.g. ECMKV)", **lbl_style).pack()
+    id_entry = tk.Entry(main_frame, **entry_style)
+    id_entry.pack(pady=(0, 10))
+    id_entry.focus_set()
+    tk.Label(main_frame, text="Origin ICAO (e.g. LYBE)", **lbl_style).pack()
+    origin_entry = tk.Entry(main_frame, **entry_style)
+    origin_entry.pack(pady=(0, 10))
+    tk.Label(main_frame, text="Landing Time (HH:MM)", **lbl_style).pack()
+    landing_entry = tk.Entry(main_frame, **entry_style)
+    landing_entry.pack(pady=(0, 10))
+    tk.Label(main_frame, text="Airline Code (3 chars)", **lbl_style).pack()
+    airline_entry = tk.Entry(main_frame, **entry_style)
+    airline_entry.pack(pady=(0, 20))
+    #the button
+    tk.Button(main_frame, text="Add Aircraft", command=AddAction, **popup_button_style).pack()
+    #center at the start
+    CenterWindow(add_window)
+    return
+
+def DeleteAircraft(principal):   #Function to have the button to ask to delete an airport
+    text_area.delete('1.0', tk.END)
+    if len(airports)==0:
+        messagebox.showwarning("No Data","No airports loaded.")
+        return
+    def RemoveAction():
+        global aircrafts
+        original_length=len(aircrafts)
+        time= time_entry.get().strip()
+        info= info_entry.get().strip().upper()
+        if ":" in time and info:
+            aircrafts=RemoveAircraft(aircrafts,time,info)
+            if len(aircrafts)==original_length:
+                messagebox.showwarning("Input Error", "That arrival doesn't exist.")
+            else:
+                text_area.insert(tk.END, f"Search completed for {time} - {info}\n")
+                remove_window.destroy()
+        else:
+            messagebox.showwarning("Input Error", "Please provide Landing Time and one extra info.")
+    #We decorate the interface
+    remove_window = tk.Toplevel(principal, padx=30, pady=30, bg="#f0f3f5")
+    remove_window.title("Remove Arrival")
+    #main interface
+    main_frame = tk.Frame(remove_window, bg="#f0f3f5")
+    main_frame.pack(expand=True)
+    #repetitive style
+    lbl_style = {"bg": "#f0f3f5", "font": ("Segoe UI", 10)}
+    entry_style = {"font": ("Segoe UI", 10), "justify": "center"}
+    #input of information
+    tk.Label(main_frame, text="Landing Time (HH:MM)", **lbl_style).pack()
+    time_entry = tk.Entry(main_frame, **entry_style)
+    time_entry.pack(pady=(0, 10))
+    tk.Label(main_frame, text="Extra Info (ID, Origin or Airline)", **lbl_style).pack()
+    info_entry = tk.Entry(main_frame, **entry_style)
+    info_entry.pack(pady=(0, 20))
+    #the button
+    tk.Button(main_frame, text="Remove Aircraft", command=RemoveAction, **popup_button_style).pack()
+    #center at the start
+    CenterWindow(remove_window)
+    return
+
 def GraphAirlines():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
@@ -323,6 +425,8 @@ def Main():
     tk.Label(menu_frame, text="EDIT DATA", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="➕ Add Airport", command=lambda: AddNewAirport(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="🗑️ Delete Airport", command=lambda: DeleteAirport(secondary), **button).pack(pady=5)
+    tk.Button(menu_frame, text="➕ Add Aircraft", command=lambda: AddNewAircraft(secondary), **button).pack(pady=5)
+    tk.Button(menu_frame, text="🗑️ Delete Aircraft", command=lambda: DeleteAircraft(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="✈️ Set Schengen Attribute", command=SetNewSchengen, **button).pack(pady=5)
     tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📑 Show Airport Data", command=ShowAirports, **button).pack(pady=5)

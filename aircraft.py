@@ -77,7 +77,40 @@ def SaveFlights(aircrafts, filename):
         print("No aircrafts found")
     new_file.close()
     return
-#Make a function that lets you change information about the aircrafts (both add and delete) and work on the PlotArrive to make space for empty information so that the Save Flights can take it into account
+
+
+def AddAircraft(aircrafts, new_aircraft):
+    i=0
+    end=False
+    while i<len(aircrafts) and end==False:
+        if aircrafts[i].id==new_aircraft.id and aircrafts[i].landing==new_aircraft.landing:
+            end=True
+        i=i+1
+    if end==True:
+        return aircrafts
+    end=False
+    position=0
+    while position<len(aircrafts) and end==False:
+        if new_aircraft.landing<aircrafts[position].landing:
+            aircrafts.insert(position,new_aircraft)
+            end=True
+        position=position+1
+    if end==False:
+        aircrafts.append(new_aircraft)
+    return aircrafts
+
+
+def RemoveAircraft(aircrafts, landing_time, extra_info):
+    i=0
+    found=False
+    while i<len(aircrafts) and found==False:
+        if aircrafts[i].landing==landing_time:
+            if (aircrafts[i].id == extra_info or aircrafts[i].icao_origin==extra_info or aircrafts[i].icao_airline==extra_info):
+                aircrafts.pop(i)
+                found=True
+        i=i+1
+    return aircrafts
+
 def PlotAirlines(aircrafts):
     try:
         Vx=[]
