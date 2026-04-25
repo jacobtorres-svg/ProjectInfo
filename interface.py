@@ -9,18 +9,18 @@ airports_file=None  #We put the airport file as None so the default state is wit
 airports=[] #We put the airports as a list, just like it was in the airport
 #important button for aesthetics in the pop-ups
 popup_button_style = {"bg": "#2c3e50","fg": "white","activebackground": "#34495e","activeforeground": "white","font": ("Segoe UI", 10, "bold"),"relief": "flat","width": 15,"cursor": "hand2"}
+
 def LoadAirports(): #Function to ask for the file to load the airports we have available
-    text_area.delete('1.0', tk.END)
     global airports,airports_file
     filename=filedialog.askopenfilename(title="Select airports file")   #Similar to putting a variable=input(), we ask for the file, but searching in our files
     if filename:
         airports=LoadAirport(filename)  #We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
         airports_file=filename  #We clarify, globally, that now there's a file for the airports
         text_area.insert(tk.END, f"Loaded {len(airports)} airports from {filename}\n")
+    text_area.see(tk.END)
     return
 
 def AddNewAirport(principal): #Function to have the button to ask to add a new airport
-    text_area.delete('1.0', tk.END)
     if len(airports)==0:
         messagebox.showwarning("No Data","No airports loaded.")
         return
@@ -45,6 +45,7 @@ def AddNewAirport(principal): #Function to have the button to ask to add a new a
                 messagebox.showwarning("Input Error","All fields are required.")
         except ValueError:  #In case of an error in the values (like inputting letters in tha latitude or longitude) show an error message
             messagebox.showwarning("Input Error","Incorrect latitude and/or longitude.")
+    text_area.see(tk.END)
     #We decorate the interface
     add_window = tk.Toplevel(principal, padx=30, pady=30, bg="#f0f3f5")
     add_window.title("Add New Airport")
@@ -72,7 +73,6 @@ def AddNewAirport(principal): #Function to have the button to ask to add a new a
     return
 
 def DeleteAirport(principal):   #Function to have the button to ask to delete an airport
-    text_area.delete('1.0', tk.END)
     if len(airports)==0:
         messagebox.showwarning("No Data","No airports loaded.")
         return
@@ -91,6 +91,7 @@ def DeleteAirport(principal):   #Function to have the button to ask to delete an
             del_window.destroy()
         else:
             messagebox.showwarning("Input Error","ICAO code required.")
+    text_area.see(tk.END)
     #We decorate the interface
     del_window = tk.Toplevel(principal, padx=40, pady=30, bg="#f0f3f5")
     del_window.title("Delete Airport")
@@ -113,7 +114,6 @@ def DeleteAirport(principal):   #Function to have the button to ask to delete an
     return
 
 def SetNewSchengen():   #Function to make the current airports get their Schengen/Non-Schengen information
-    text_area.delete('1.0', tk.END)
     global airports
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
@@ -123,10 +123,10 @@ def SetNewSchengen():   #Function to make the current airports get their Schenge
         airports[i].sche=SetSchengen(airports[i])    #We call the SetSchengen from the airport to look if the airport is or isn't Schengen
         i=i+1
     text_area.insert(tk.END,"Updated Schengen attribute for all airports.\n")
+    text_area.see(tk.END)
     return airports
 
 def ShowAirports(): #Function to show all the current information from all the current airports in the list
-    text_area.delete('1.0', tk.END)
     if len(airports)==0:
         messagebox.showwarning("No Data","No airports loaded.")
         return
@@ -136,10 +136,10 @@ def ShowAirports(): #Function to show all the current information from all the c
         info=PrintAirport(airports[i])
         text_area.insert(tk.END,info)
         i=i+1
+    text_area.see(tk.END)
     return
 
 def SaveSchengen(): #Function to save all the Schengen airports into a separate file of our choice
-    text_area.delete('1.0', tk.END)
     if len(airports)==0:
         messagebox.showwarning("No Data","No airports loaded.")
         return
@@ -147,6 +147,7 @@ def SaveSchengen(): #Function to save all the Schengen airports into a separate 
     if filename:
         SaveSchengenAirports(airports,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
         text_area.insert(tk.END,f"Schengen airports saved to {filename}\n")
+    text_area.see(tk.END)
     return
 
 def GraphAirports():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
@@ -160,13 +161,13 @@ def GraphAirports():    #Function to ask for the plot to create a graph of Schen
     return
 
 def ShowMap():  #Function to create the code for the Google Earth to place all the airports
-    text_area.delete('1.0', tk.END)
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save the airports",defaultextension=".kml")
     MapAirports(airports,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
+    text_area.see(tk.END)
     return
 
 #---AIRPORT SECTION---
@@ -174,17 +175,16 @@ aircrafts_file=None  #We put the aircrafts file as None so the default state is 
 aircrafts=[] #We put the aircrafts as a list, just like it was in the aircraft
 
 def LoadAricrafts():
-    text_area.delete('1.0', tk.END)
     global aircrafts,aircrafts_file
     filename=filedialog.askopenfilename(title="Select airports file")  # Similar to putting a variable=input(), we ask for the file, but searching in our files
     if filename:
         aircrafts=LoadArrivals(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
         aircrafts_file=filename  # We clarify, globally, that now there's a file for the airports
         text_area.insert(tk.END, f"Loaded {len(aircrafts)} airports from {filename}\n")
+    text_area.see(tk.END)
     return
 
 def ShowAircrafts(): #Function to show all the current information from all the current airports in the list
-    text_area.delete('1.0', tk.END)
     if len(aircrafts)==0:
         messagebox.showwarning("No Data","No aircrafts loaded.")
         return
@@ -194,10 +194,10 @@ def ShowAircrafts(): #Function to show all the current information from all the 
         info=PrintAircrafts(aircrafts[i])
         text_area.insert(tk.END,info)
         i=i+1
+    text_area.see(tk.END)
     return
 
 def SaveArrivals(): #Function to save all the Schengen airports into a separate file of our choice
-    text_area.delete('1.0', tk.END)
     if len(aircrafts)==0:
         messagebox.showwarning("No Data","No arrivals loaded.")
         return
@@ -205,10 +205,10 @@ def SaveArrivals(): #Function to save all the Schengen airports into a separate 
     if filename:
         SaveFlights(aircrafts,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
         text_area.insert(tk.END,f"Arrivals saved to {filename}\n")
+    text_area.see(tk.END)
     return
 
 def AddNewAircraft(principal): #Function to have the button to ask to add a new airport
-    text_area.delete('1.0', tk.END)
     if len(aircrafts)==0:
         messagebox.showwarning("No Data","No aircrafts loaded.")
         return
@@ -236,6 +236,7 @@ def AddNewAircraft(principal): #Function to have the button to ask to add a new 
                 add_window.destroy()
         else:
             messagebox.showwarning("Input Error", "All fields are required.")
+    text_area.see(tk.END)
     #We decorate the interface
     add_window = tk.Toplevel(principal, padx=30, pady=30, bg="#f0f3f5")
     add_window.title("Add Arrival")
@@ -266,7 +267,6 @@ def AddNewAircraft(principal): #Function to have the button to ask to add a new 
     return
 
 def DeleteAircraft(principal):   #Function to have the button to ask to delete an airport
-    text_area.delete('1.0', tk.END)
     if len(airports)==0:
         messagebox.showwarning("No Data","No airports loaded.")
         return
@@ -284,6 +284,7 @@ def DeleteAircraft(principal):   #Function to have the button to ask to delete a
                 remove_window.destroy()
         else:
             messagebox.showwarning("Input Error", "Please provide Landing Time and one extra info.")
+    text_area.see(tk.END)
     #We decorate the interface
     remove_window = tk.Toplevel(principal, padx=30, pady=30, bg="#f0f3f5")
     remove_window.title("Remove Arrival")
@@ -331,7 +332,6 @@ def GraphFlightType():    #Function to ask for the plot to create a graph of Sch
     return
 
 def ShowMapRoute():  #Function to create the code for the Google Earth to place all the flight routes
-    text_area.delete('1.0', tk.END)
     if len(aircrafts)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
@@ -341,10 +341,10 @@ def ShowMapRoute():  #Function to create the code for the Google Earth to place 
     filename=filedialog.asksaveasfilename(title="Save the route",defaultextension=".kml")
     MapFlights(aircrafts,airports,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
+    text_area.see(tk.END)
     return
 
 def ShowMapLongDistance():  #Function to create the code for the Google Earth to place all the long distance flights
-    text_area.delete('1.0', tk.END)
     if len(aircrafts)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
@@ -354,6 +354,7 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
     filename=filedialog.asksaveasfilename(title="Save long distance",defaultextension=".kml")
     LongDistanceArrivals(aircrafts,airports,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
+    text_area.see(tk.END)
     return
 
 #---LEBL SECTION---
@@ -361,17 +362,16 @@ terminals_file=None  #We put the terminals file as None so the default state is 
 gate_info=[] #We put the gate information as a list, just like it was in the LEBL
 
 def LoadTerminals():
-    text_area.delete('1.0', tk.END)
     global terminals_file, gate_info
     filename=filedialog.askopenfilename(title="Select terminal file")  #Similar to putting a variable=input(), we ask for the file, but searching in our files
     if filename:
         gate_info=GateOccupancy(LoadAirportStructure("Terminals.txt"))  #We call the LoadTerminal from the airport to give us the list we knew (and still know here) as airports
         terminals_file=filename  # We clarify, globally, that now there's a file for the airports
         text_area.insert(tk.END, f"Loaded terminals from {filename}\n")
+    text_area.see(tk.END)
     return
 
 def ShowGateInfo(): #Function to show all the current information from all the current airports in the list
-    text_area.delete('1.0', tk.END)
     if len(gate_info)==0:
         messagebox.showwarning("No Data","No aircrafts loaded.")
         return
@@ -381,6 +381,7 @@ def ShowGateInfo(): #Function to show all the current information from all the c
         info=PrintGateInfo(gate_info[i])
         text_area.insert(tk.END,info)
         i=i+1
+    text_area.see(tk.END)
     return
 
 #---INTERFACE AESTHETICS---

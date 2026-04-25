@@ -102,7 +102,6 @@ def RemoveAirport(airport,code):    #Function to delete airports from the list
 
 def PlotAirports(airports): #Function to make the graph of the Schengen vs Non-Schengen airports
     i=0
-    no_schengen=0
     schengen=0
     while i<len(airports):
         if airports[i].sche==True: #For every Schengen airport +1
