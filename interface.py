@@ -2,7 +2,7 @@ from LEBL import *
 from airport import *
 from aircraft import *
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 
 #---AIRPORT SECTION---
 airports_file=None  #We put the airport file as None so the default state is without any information, and we can add whatever file we want

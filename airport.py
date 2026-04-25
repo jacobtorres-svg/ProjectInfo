@@ -8,20 +8,18 @@ class Airport:  #We open the class for the airport with all the variables we are
         self.sche=None
 
 def IsSchengenAirport(code):    #Function to check if the code of the input-ed airport is Schengen
-    schengen=open("Schengen_codes.txt","r")     #File that contains, in each line, the 2 first letters that make an icao code and indicate it's Schengen
-    sche=schengen.readline()
+    i=0
+    sche=['LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG', 'EH', 'LH', 'BI', 'LI', 'EV', 'EY', 'EL', 'LM',
+            'EN', 'EP', 'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS']
     end=False
-    #No posar un arxiu
     true_code=False #Bool that'll indicate if the code is or isn't Schenge to the user
-    while sche!="" and end==False:
-        sche=sche.replace("\n","")  #We remove the \n at the end of each code (from the file), because that just indicates a change of line
-        if code[:2]==sche:
+    while i<len(sche) and end==False:
+        if code[:2]==sche[i]:
             true_code=True
             end=True
         else:
             true_code=False
-        sche=schengen.readline()
-    schengen.close()
+        i=i+1
     return true_code    #The function returns the updated value of the airport Schengen(True)/not Schengen(False)
 
 def SetSchengen(airport):   #Function to ask for the IsSchengenAirport to tell us if it's Schengen, and we add that value to the airport attributes
