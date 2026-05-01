@@ -247,17 +247,17 @@ def AddNewAircraft(principal): #Function to have the button to ask to add a new 
     lbl_style = {"bg": "#f0f3f5", "font": ("Segoe UI", 10)}
     entry_style = {"font": ("Segoe UI", 10), "justify": "center"}
     #input of information
-    tk.Label(main_frame, text="Aircraft ID (e.g. ECMKV)", **lbl_style).pack()
+    tk.Label(main_frame, text="Aircraft ID", **lbl_style).pack()
     id_entry = tk.Entry(main_frame, **entry_style)
     id_entry.pack(pady=(0, 10))
     id_entry.focus_set()
-    tk.Label(main_frame, text="Origin ICAO (e.g. LYBE)", **lbl_style).pack()
+    tk.Label(main_frame, text="Origin ICAO", **lbl_style).pack()
     origin_entry = tk.Entry(main_frame, **entry_style)
     origin_entry.pack(pady=(0, 10))
-    tk.Label(main_frame, text="Landing Time (HH:MM)", **lbl_style).pack()
+    tk.Label(main_frame, text="Landing Time", **lbl_style).pack()
     landing_entry = tk.Entry(main_frame, **entry_style)
     landing_entry.pack(pady=(0, 10))
-    tk.Label(main_frame, text="Airline Code (3 chars)", **lbl_style).pack()
+    tk.Label(main_frame, text="Airline Code", **lbl_style).pack()
     airline_entry = tk.Entry(main_frame, **entry_style)
     airline_entry.pack(pady=(0, 20))
     #the button
@@ -267,7 +267,7 @@ def AddNewAircraft(principal): #Function to have the button to ask to add a new 
     return
 
 def DeleteAircraft(principal):   #Function to have the button to ask to delete an airport
-    if len(airports)==0:
+    if len(aircrafts)==0:
         messagebox.showwarning("No Data","No airports loaded.")
         return
     def RemoveAction():
@@ -295,10 +295,10 @@ def DeleteAircraft(principal):   #Function to have the button to ask to delete a
     lbl_style = {"bg": "#f0f3f5", "font": ("Segoe UI", 10)}
     entry_style = {"font": ("Segoe UI", 10), "justify": "center"}
     #input of information
-    tk.Label(main_frame, text="Landing Time (HH:MM)", **lbl_style).pack()
+    tk.Label(main_frame, text="Landing Time", **lbl_style).pack()
     time_entry = tk.Entry(main_frame, **entry_style)
     time_entry.pack(pady=(0, 10))
-    tk.Label(main_frame, text="Extra Info (ID, Origin or Airline)", **lbl_style).pack()
+    tk.Label(main_frame, text="ID, Origin or Airline", **lbl_style).pack()
     info_entry = tk.Entry(main_frame, **entry_style)
     info_entry.pack(pady=(0, 20))
     #the button
@@ -357,7 +357,7 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
     text_area.see(tk.END)
     return
 
-#---LEBL SECTION--- VOLVER A AÑADIR BORRAR Y COSAS
+#---LEBL SECTION---
 terminals_file=None  #We put the terminals file as None so the default state is without any information, and we can add whatever file we want
 gate_info=[] #We put the gate information as a list, just like it was in the LEBL
 
