@@ -1,3 +1,5 @@
+from aircraft import *
+
 class BarcelonaAP:
     def __init__(self,code):
         self.code=code  #code of the airport (LEBL)
@@ -19,7 +21,7 @@ class Gate:
     def __init__(self,name):
         self.name=name  #name of the gate (ex. "T1AG1")
         self.occupancy=None #status of occupancy
-        self.id="-"  #ID of the aircraft in the case of occupancy=True
+        self.aircraft="-"  #ID of the aircraft in the case of occupancy=True
 
 def SetGates (area, init_gate, end_gate, prefix):
     if end_gate<=init_gate:
@@ -88,9 +90,10 @@ def  GateOccupancy (bcn):
                 gate=area.gate_list[k]  #We look at GATE
                 if gate.occupied:
                     status="Occupied"
+                    code=gate.aircraft
                 else:
                     status="Free"
-                code=gate.id
+                    code="-"
                 list_gates=(f"Name: {gate.name}\n"
                             f"Code: {code}\n"
                             f"Status: {status}\n\n")
@@ -104,15 +107,60 @@ def PrintGateInfo(all_info):
     info=all_info
     return info
 
-
 def IsAirlineInTerminal (terminal, name):
-    return
+    if name == "":
+        return False
+    if len(terminal.list_code)==0:
+        return False
+    return name in terminal.list_code
 
 def SearchTerminal (bcn, name):
-    return
+    terminal=bcn.list_terminal
+    if IsAirlineInTerminal(terminal[0], name):
+        return terminal[0].name
+    elif IsAirlineInTerminal(terminal[1], name):
+        return terminal[1].name
+    else:
+        return ""
 
-def AssignGate (bcn, aircraft):
-    return
+def AssignGate (bcn,aircraft):
+    try:
+        terminal_name = SearchTerminal(bcn, aircraft.icao_airline)
+        if not terminal_name:
+            return -1
+        sche_prefixes = ['LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG', 'EH', 'LH', 'BI',
+                         'LI', 'EV', 'EY', 'EL', 'LM', 'EN', 'EP', 'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS']
+        tipo_vuelo = "Schengen" if aircraft.icao_origin[:2] in sche_prefixes else "non-Schengen"
+        i = 0
+        found = False
+        while i < len(bcn.list_terminal) and not found:
+            terminal = bcn.list_terminal[i]
+            if terminal.name == terminal_name:
+                j = 0
+                while j < len(terminal.list_obj) and not found:
+                    area = terminal.list_obj[j]
+                    # Comparamos el tipo de área (limpiando espacios) con el tipo de vuelo
+                    if area.sche.strip() == tipo_vuelo:
+                        k = 0
+                        while k < len(area.gate_list) and not found:
+                            gate = area.gate_list[k]
+                            # Verificamos si la puerta está libre (None o False)
+                            # Nota: He usado gate.occupancy que es el nombre en tu clase Gate
+                            if gate.occupancy is None or gate.occupancy == False:
+                                gate.occupancy = True
+                                gate.aircraft=aircraft.id
+                                print(gate.aircraft)
+                                found = True  # Esto romperá todos los bucles
+                            k += 1
+                    j += 1
+            i += 1
+        if found:
+            return gate.name
+        else:
+            return "occupied"
+
+    except Exception:
+        return "error"
 
 if __name__ == "__main__":
     print(LoadAirportStructure("Terminals.txt"))
@@ -127,11 +175,18 @@ if __name__ == "__main__":
     print(f"Número de puertas creadas: {len(test_area.gate_list)}")
 
     for gate in test_area.gate_list:
-        print(f"Puerta: {gate.name} | Ocupada: {gate.occupied} | Avión: '{gate.aircraft_id}'")
+        print(f"Puerta: {gate.name} | Ocupada: {gate.occupied} | Avión: '{gate.aircraft}'")
 
     mi_terminal = Terminal("T1")
     LoadAirlines(mi_terminal, "T1")
     print(f"Terminal: {mi_terminal.name}")
     print(f"Codes: {mi_terminal.list_code}")
     print(GateOccupancy(LoadAirportStructure("Terminals.txt")))
+    aviones = LoadArrivals("Arrivals.txt") #aircrafts from aircrafts
+    aeropuerto = LoadAirportStructure("Terminals.txt") #bcn
 
+    for un_avion in aviones:
+        resultado = AssignGate(aeropuerto, un_avion)
+        if resultado != -1:
+            print(f"Avión {un_avion.icao_airline}: {resultado}")
+    print(SearchTerminal(aeropuerto, "VLG"))

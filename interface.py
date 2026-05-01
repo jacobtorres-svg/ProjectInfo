@@ -357,7 +357,7 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
     text_area.see(tk.END)
     return
 
-#---LEBL SECTION---
+#---LEBL SECTION--- VOLVER A AÑADIR BORRAR Y COSAS
 terminals_file=None  #We put the terminals file as None so the default state is without any information, and we can add whatever file we want
 gate_info=[] #We put the gate information as a list, just like it was in the LEBL
 

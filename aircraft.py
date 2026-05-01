@@ -66,7 +66,6 @@ def PlotArrivals (aircrafts):
 def SaveFlights(aircrafts, filename):
     new_file=open(filename, "w")  # We open a new file with whatever name we've input-ed
     i=0
-    j=0
     if len(aircrafts)>0:
         while i<len(aircrafts):
             info=aircrafts[i]
