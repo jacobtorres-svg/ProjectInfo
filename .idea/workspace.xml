@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2a31b5e9-7405-4985-9a47-0fd2ec614b86" name="Changes" comment="Version 3">
+      <change beforePath="$PROJECT_DIR$/.idea/ProjectInfo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ProjectInfo.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <list id="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" name="Changes by ihazc" comment="">
       <change beforePath="$PROJECT_DIR$/LEBL.py" beforeDir="false" afterPath="$PROJECT_DIR$/LEBL.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface.py" afterDir="false" />
+    </list>
+    <list id="1c565276-ae42-47ac-86af-016bd6b1670a" name="Changes by Jacob" comment="">
       <change beforePath="$PROJECT_DIR$/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,6 +36,14 @@
     &quot;accountId&quot;: &quot;2420735f-7804-42fe-bb7d-b89e847d6966&quot;
   }
 }</component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/interface.py">
+      <ranges>
+        <range start1="387" end1="387" start2="387" end2="397" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
+        <range start1="434" end1="434" start2="444" end2="445" changelist="1c565276-ae42-47ac-86af-016bd6b1670a" />
+      </ranges>
+    </file>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8,
   &quot;fromUser&quot;: false
@@ -38,6 +56,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Notification.DisplayName-DoNotAsk-cwm.host.connection.user_joined": "Code With Me",
+    "Notification.DoNotAsk-cwm.host.connection.user_joined": "true",
     "Python.LEBL.executor": "Run",
     "Python.aircraft.executor": "Run",
     "Python.airport.executor": "Run",
@@ -68,9 +88,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="DEBUG_JUST_MY_CODE" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="RUN_TOOL" value="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interface.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
