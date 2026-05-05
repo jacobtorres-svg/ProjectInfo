@@ -385,6 +385,16 @@ def ShowGateInfo(): #Function to show all the current information from all the c
     return
 
 def ShowOccupancy():
+    if len(gate_info)==0:
+        messagebox.showwarning("No Data","No aircrafts loaded.")
+        return
+    text_area.insert(tk.END,"---Gate Information---\n")
+    i=0
+    while i<len(gate_info):
+        info=PrintOccupancy(gate_info[i])
+        text_area.insert(tk.END,info)
+        i=i+1
+    text_area.see(tk.END)
     return
 
 #---INTERFACE AESTHETICS---
@@ -432,6 +442,7 @@ def Main():
     tk.Button(menu_frame, text="➕ Add Aircraft", command=lambda: AddNewAircraft(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="🗑️ Delete Aircraft", command=lambda: DeleteAircraft(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="✈️ Set Schengen Attribute", command=SetNewSchengen, **button).pack(pady=5)
+    tk.Button(menu_frame, text="🛬 Assign Gates", command=lambda: ShowOccupancy, **button).pack(pady=5)
     tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📑 Show Airport Data", command=ShowAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowAircrafts, **button).pack(pady=5)

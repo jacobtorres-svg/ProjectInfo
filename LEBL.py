@@ -139,29 +139,36 @@ def AssignGate (bcn,aircraft):
                 j = 0
                 while j < len(terminal.list_obj) and not found:
                     area = terminal.list_obj[j]
-                    # Comparamos el tipo de área (limpiando espacios) con el tipo de vuelo
                     if area.sche.strip() == tipo_vuelo:
                         k = 0
                         while k < len(area.gate_list) and not found:
                             gate = area.gate_list[k]
-                            # Verificamos si la puerta está libre (None o False)
-                            # Nota: He usado gate.occupancy que es el nombre en tu clase Gate
                             if gate.occupancy is None or gate.occupancy == False:
                                 gate.occupancy = True
                                 gate.aircraft=aircraft.id
                                 print(gate.aircraft)
-                                found = True  # Esto romperá todos los bucles
+                                found = True
                             k += 1
                     j += 1
             i += 1
         if found:
             return gate.name
         else:
-            return "occupied"
-
+            return "Free"
     except Exception:
         return "error"
 
+def PrintOccupancy(bcn):
+    if gate.occupancy == True:
+        status = "Occupied"
+        code = gate.aircraft
+    else:
+        status = "Free"
+        code = "-"
+    info = (f"Name: {gate.name}\n"
+            f"Code: {code}\n"
+            f"Status: {status}\n\n")
+    return info
 if __name__ == "__main__":
     print(LoadAirportStructure("Terminals.txt"))
     test_area=BoardingArea("Area A", "Schengen")
@@ -187,6 +194,7 @@ if __name__ == "__main__":
 
     for un_avion in aviones:
         resultado = AssignGate(aeropuerto, un_avion)
+        print ("it's",PrintOccupancy(aeropuerto))
         if resultado != -1:
             print(f"Aerolinea {un_avion.icao_airline}: {resultado}")
     print(SearchTerminal(aeropuerto, "VLG"))
