@@ -384,6 +384,9 @@ def ShowGateInfo(): #Function to show all the current information from all the c
     text_area.see(tk.END)
     return
 
+def ShowOccupancy():
+    return
+
 #---INTERFACE AESTHETICS---
 def CenterWindow(window):
     window.update_idletasks()

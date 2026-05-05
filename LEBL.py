@@ -188,5 +188,5 @@ if __name__ == "__main__":
     for un_avion in aviones:
         resultado = AssignGate(aeropuerto, un_avion)
         if resultado != -1:
-            print(f"Avión {un_avion.icao_airline}: {resultado}")
+            print(f"Aerolinea {un_avion.icao_airline}: {resultado}")
     print(SearchTerminal(aeropuerto, "VLG"))
