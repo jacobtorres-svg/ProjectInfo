@@ -5,17 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2a31b5e9-7405-4985-9a47-0fd2ec614b86" name="Changes" comment="Version 3">
-      <change beforePath="$PROJECT_DIR$/.idea/ProjectInfo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ProjectInfo.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
-    <list id="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" name="Changes by ihazc" comment="">
-      <change beforePath="$PROJECT_DIR$/LEBL.py" beforeDir="false" afterPath="$PROJECT_DIR$/LEBL.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface.py" afterDir="false" />
-    </list>
-    <list id="1c565276-ae42-47ac-86af-016bd6b1670a" name="Changes by Jacob" comment="">
-      <change beforePath="$PROJECT_DIR$/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface.py" afterDir="false" />
-    </list>
+    <list id="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" name="Changes by ihazc" comment="" />
+    <list id="1c565276-ae42-47ac-86af-016bd6b1670a" name="Changes by Jacob" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,6 +16,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -36,14 +30,6 @@
     &quot;accountId&quot;: &quot;2420735f-7804-42fe-bb7d-b89e847d6966&quot;
   }
 }</component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/interface.py">
-      <ranges>
-        <range start1="387" end1="387" start2="387" end2="397" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
-        <range start1="434" end1="434" start2="444" end2="445" changelist="1c565276-ae42-47ac-86af-016bd6b1670a" />
-      </ranges>
-    </file>
-  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8,
   &quot;fromUser&quot;: false
@@ -53,27 +39,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Notification.DisplayName-DoNotAsk-cwm.host.connection.user_joined": "Code With Me",
-    "Notification.DoNotAsk-cwm.host.connection.user_joined": "true",
-    "Python.LEBL.executor": "Run",
-    "Python.aircraft.executor": "Run",
-    "Python.airport.executor": "Run",
-    "Python.interface.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "ai.playground.ignore.import.keys.banner.in.settings": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "master",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-cwm.host.connection.user_joined&quot;: &quot;Code With Me&quot;,
+    &quot;Notification.DoNotAsk-cwm.host.connection.user_joined&quot;: &quot;true&quot;,
+    &quot;Python.LEBL.executor&quot;: &quot;Run&quot;,
+    &quot;Python.aircraft.executor&quot;: &quot;Run&quot;,
+    &quot;Python.airport.executor&quot;: &quot;Run&quot;,
+    &quot;Python.interface.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="interface" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ProjectInfo" />
@@ -88,7 +74,9 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="RUN_TOOL" value="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/interface.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
