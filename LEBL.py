@@ -152,23 +152,24 @@ def AssignGate (bcn,aircraft):
                     j += 1
             i += 1
         if found:
-            return gate.name
+            return gate.occupancy
         else:
             return "Free"
     except Exception:
         return "error"
 
 def PrintOccupancy(bcn):
-    if gate.occupancy == True:
-        status = "Occupied"
-        code = gate.aircraft
+    if gate.occupancy==True:
+        status="Occupied"
+        code=gate.aircraft
     else:
-        status = "Free"
-        code = "-"
-    info = (f"Name: {gate.name}\n"
+        status="Free"
+        code="-"
+    info=(f"Name: {gate.name}\n"
             f"Code: {code}\n"
             f"Status: {status}\n\n")
     return info
+
 if __name__ == "__main__":
     print(LoadAirportStructure("Terminals.txt"))
     test_area=BoardingArea("Area A", "Schengen")

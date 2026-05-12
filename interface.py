@@ -391,7 +391,7 @@ def ShowOccupancy():
     text_area.insert(tk.END,"---Gate Information---\n")
     i=0
     while i<len(gate_info):
-        info=PrintOccupancy(gate_info[i])
+        info=PrintOccupancy(AssignGate(gate_info[i],aircrafts[i]))
         text_area.insert(tk.END,info)
         i=i+1
     text_area.see(tk.END)
