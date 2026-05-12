@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2a31b5e9-7405-4985-9a47-0fd2ec614b86" name="Changes" comment="Version 3">
-      <change beforePath="$PROJECT_DIR$/.idea/ProjectInfo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ProjectInfo.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aircraft.py" beforeDir="false" afterPath="$PROJECT_DIR$/aircraft.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface.py" afterDir="false" />
-    </list>
+    <list default="true" id="2a31b5e9-7405-4985-9a47-0fd2ec614b86" name="Changes" comment="Version 3" />
     <list id="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" name="Changes by ihazc" comment="" />
     <list id="1c565276-ae42-47ac-86af-016bd6b1670a" name="Changes by Jacob" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -296,7 +290,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777632487489</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Version 3">
+      <option name="closed" value="true" />
+      <created>1778573765153</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1778573765153</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
