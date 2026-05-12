@@ -47,16 +47,12 @@ def PlotArrivals (aircrafts):
     j=0
     while i<len(aircrafts):
         time=aircrafts[i].landing
-        if len(time)==5:
-            if time[0]==start[0] and time[1]==start[1]:
-                Vy[j]=Vy[j]+1
-            else:
-                start=[time[0],time[1]]
-                i=i-1
-                j=j+1
+        if ":" in time:
+            hour=int(time.split(":")[0])
+            Vy[hour]+=1
         i=i+1
     pyplot.bar(range(24),Vy,label="Arriving aircrafts")
-    pyplot.xticks(range(24),rotation=45)
+    pyplot.xticks(range(24))
     pyplot.xlabel("Hours")
     pyplot.ylabel("Flights")
     pyplot.legend()

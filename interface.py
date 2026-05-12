@@ -453,6 +453,7 @@ def Main():
     tk.Button(menu_frame, text="📈 Plot Schengen/Type", command=GraphAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot Airlines' Stats", command=GraphAirlines, **button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot Schengen/Type arrivals", command=GraphFlightType, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📈 Plot Arrivals",command=lambda: PlotArrivals(aircrafts),**button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Airports", command=ShowMap, **button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Routes", command=ShowMapRoute, **button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Long Distance Flights", command=ShowMapLongDistance, **button).pack(pady=5)
