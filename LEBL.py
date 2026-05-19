@@ -170,7 +170,9 @@ def PrintOccupancy(bcn):
     return info
 
 def AssignNightGates (bcn, aircrafts):
-    return
+    list=NightAircraft(aircrafts)
+    return AssignGate(bcn,list)
+
 
 def FreeGate (bcn, id):
     return

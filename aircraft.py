@@ -2,14 +2,16 @@ from matplotlib import pyplot
 from numpy import *
 
 class Aircraft:  #We open the class for the airport with all the variables we are going to use
-    def __init__(self,id,icao_origin,landing,icao_airline):
+    def __init__(self,id,icao_origin,icao_destination,landing,departure,icao_airline):
         self.id=id
         self.icao_origin=icao_origin
+        self.icao_destination=icao_destination
         self.landing=landing
+        self.departure=departure
         self.icao_airline=icao_airline
 
 def LoadArrivals (filename):
-    aircrafts=[]
+    arrivals=[]
     try:
         file=open(filename,"r")
         file.readline()
@@ -25,13 +27,13 @@ def LoadArrivals (filename):
             airline=info[3].strip()
             if len(airline)!=3:
                 airline="-"
-            aircraft_class=Aircraft(info[0],info[1],info[2],airline)
-            aircrafts.append(aircraft_class)
+            aircraft_class=Aircraft(info[0],info[1],None,info[2],None,airline)
+            arrivals.append(aircraft_class)
             arrive=file.readline()
         file.close()
     except FileNotFoundError:   #This exception indicates that if we can't find the file instead of shooting an error it just returns an empty vector
         return []
-    return aircrafts
+    return arrivals
 
 def PrintAircrafts(aircrafts):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
     info = (f"ID: {aircrafts.id}\n"
@@ -237,10 +239,63 @@ def LongDistanceArrivals(aircrafts,airports,filename):
     return
 
 def LoadDepartures(filename):
-    return
+    departures=[]
+    try:
+        file=open(filename,"r")
+        file.readline()
+        depart=file.readline() #We ride two lines in one go to skip the title
+        while depart != "":
+            info=depart.split(" ")
+            if len(list(info[1]))!=4:
+                info[1]="-"
+            time=list(info[2])
+            if not (0<=int(time[0])<=2 and time[2]==":" and 0<=int(time[3])<=5):
+                if int(time[0])==2 and int(time[1])>4:
+                    info[2]="-"
+            airline=info[3].strip()
+            if len(airline)!=3:
+                airline="-"
+            aircraft_class=Aircraft(info[0],None,info[1],None,info[2],airline)
+            departures.append(aircraft_class)
+            depart=file.readline()
+        file.close()
+    except FileNotFoundError:   #This exception indicates that if we can't find the file instead of shooting an error it just returns an empty vector
+        return []
+    return departures
 
 def MergeMovements(arrivals, departures):
-    return
+    complete_flights=[]
+    i=0
+    j=0
+    start=0
+    new=0
+    while i<len(arrivals):
+        while j<len(departures):
+            if arrivals[i].id==departures[j].id and arrivals[i].icao_airline==departures[i].icao_airline:
+                flight=Aircraft(arrivals[i].id,arrivals[i].icao_origin,departures[j].icao_destination,arrivals[i].landing,departures[i].departure,arrivals[i].icao_airline)
+                complete_flights.append(flight)
+                new=new+1
+            j=j+1
+        j=0
+        if start<=new:
+            complete_flights.append(arrivals[i])
+        i=i+1
+    i=0
+    j=0
+    start=0
+    new=0
+    while i<len(departures):
+        while j<len(arrivals):
+            if departures[i].id==arrivals[j].id and departures[i].icao_airline==arrivals[i].icao_airline:
+                new=new+1
+            j=j+1
+        j=0
+        if start<=new:
+            complete_flights.append(departures[i])
+        i=i+1
+    return complete_flights
+
+print(MergeMovements(LoadArrivals("Arrivals.txt"),LoadDepartures("Departures.txt")))
 
 def NightAircraft (aircrafts):
     try:

@@ -360,15 +360,34 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
 #---LEBL SECTION---
 terminals_file=None  #We put the terminals file as None so the default state is without any information, and we can add whatever file we want
 gate_info=[] #We put the gate information as a list, just like it was in the LEBL
+bcn=[]
 
 def LoadTerminals():
-    global terminals_file, gate_info
+    global terminals_file, gate_info, bcn
     filename=filedialog.askopenfilename(title="Select terminal file")  #Similar to putting a variable=input(), we ask for the file, but searching in our files
     if filename:
-        gate_info=GateOccupancy(LoadAirportStructure("Terminals.txt"))  #We call the LoadTerminal from the airport to give us the list we knew (and still know here) as airports
+        bcn=LoadAirportStructure(filename)
+        gate_info=GateOccupancy(bcn)  #We call the LoadTerminal from the airport to give us the list we knew (and still know here) as airports
         terminals_file=filename  # We clarify, globally, that now there's a file for the airports
         text_area.insert(tk.END, f"Loaded terminals from {filename}\n")
     text_area.see(tk.END)
+    return
+
+def AssignGates():
+    global gate_info, bcn, aircrafts
+    try:
+        if len(gate_info)==0:
+            messagebox.showwarning("No Data","No Terminals loaded.")
+            return
+        i=0
+        while i<len(aircrafts):
+            AssignGate(bcn,aircrafts[i])
+            i=i+1
+        gate_info=GateOccupancy(bcn)
+        text_area.insert(tk.END,"Updated Gates occupancy.\n")
+        text_area.see(tk.END)
+    except ValueError:
+        return
     return
 
 def ShowGateInfo(): #Function to show all the current information from all the current airports in the list
@@ -379,19 +398,6 @@ def ShowGateInfo(): #Function to show all the current information from all the c
     i=0
     while i<len(gate_info):
         info=PrintGateInfo(gate_info[i])
-        text_area.insert(tk.END,info)
-        i=i+1
-    text_area.see(tk.END)
-    return
-
-def ShowOccupancy():
-    if len(gate_info)==0:
-        messagebox.showwarning("No Data","No aircrafts loaded.")
-        return
-    text_area.insert(tk.END,"---Gate Information---\n")
-    i=0
-    while i<len(gate_info):
-        info=PrintOccupancy(AssignGate(gate_info[i],aircrafts[i]))
         text_area.insert(tk.END,info)
         i=i+1
     text_area.see(tk.END)
@@ -442,7 +448,7 @@ def Main():
     tk.Button(menu_frame, text="➕ Add Aircraft", command=lambda: AddNewAircraft(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="🗑️ Delete Aircraft", command=lambda: DeleteAircraft(secondary), **button).pack(pady=5)
     tk.Button(menu_frame, text="✈️ Set Schengen Attribute", command=SetNewSchengen, **button).pack(pady=5)
-    tk.Button(menu_frame, text="🛬 Assign Gates", command=lambda: ShowOccupancy, **button).pack(pady=5)
+    tk.Button(menu_frame, text="🛬 Assign Gates", command=AssignGates, **button).pack(pady=5)
     tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📑 Show Airport Data", command=ShowAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowAircrafts, **button).pack(pady=5)

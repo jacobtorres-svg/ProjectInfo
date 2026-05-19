@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2a31b5e9-7405-4985-9a47-0fd2ec614b86" name="Changes" comment="Version 3">
-      <change beforePath="$PROJECT_DIR$/.idea/ProjectInfo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ProjectInfo.iml" afterDir="false" />
+    <list default="true" id="2a31b5e9-7405-4985-9a47-0fd2ec614b86" name="Changes" comment="Version 4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LEBL.py" beforeDir="false" afterPath="$PROJECT_DIR$/LEBL.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aircraft.py" beforeDir="false" afterPath="$PROJECT_DIR$/aircraft.py" afterDir="false" />
     </list>
     <list id="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" name="Changes by ihazc" comment="">
       <change beforePath="$PROJECT_DIR$/aircraft.py" beforeDir="false" afterPath="$PROJECT_DIR$/aircraft.py" afterDir="false" />
@@ -39,15 +36,6 @@
   }
 }</component>
   <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/LEBL.py">
-      <ranges>
-        <range start1="127" end1="128" start2="127" end2="128" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
-        <range start1="132" end1="133" start2="132" end2="133" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
-        <range start1="141" end1="142" start2="141" end2="142" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
-        <range start1="148" end1="149" start2="148" end2="148" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
-        <range start1="173" end1="174" start2="172" end2="175" changelist="453c6622-5bc7-479d-951a-f265c234f0e0" />
-      </ranges>
-    </file>
     <file path="$PROJECT_DIR$/aircraft.py">
       <ranges>
         <range start1="4" end1="5" start2="4" end2="5" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
@@ -56,12 +44,8 @@
         <range start1="11" end1="12" start2="13" end2="14" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
         <range start1="27" end1="29" start2="29" end2="31" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
         <range start1="33" end1="34" start2="35" end2="36" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
-        <range start1="44" end1="45" start2="46" end2="46" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
-        <range start1="46" end1="47" start2="47" end2="47" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
-        <range start1="241" end1="242" start2="241" end2="264" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
-        <range start1="244" end1="245" start2="266" end2="296" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
-        <range start1="247" end1="248" start2="298" end2="309" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
-        <range start1="252" end1="252" start2="313" end2="314" changelist="2a31b5e9-7405-4985-9a47-0fd2ec614b86" />
+        <range start1="239" end1="240" start2="241" end2="264" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
+        <range start1="242" end1="243" start2="266" end2="298" changelist="348c0d92-2d8f-46b0-8500-6b0a68a9bf8a" />
       </ranges>
     </file>
   </component>
@@ -347,7 +331,15 @@
       <option name="project" value="LOCAL" />
       <updated>1778582285055</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Version 4">
+      <option name="closed" value="true" />
+      <created>1779186142813</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1779186142813</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -368,7 +360,8 @@
     <MESSAGE value="Changes by Jacob" />
     <MESSAGE value="Version 2" />
     <MESSAGE value="Version 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Version 3" />
+    <MESSAGE value="Version 4" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 4" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -380,7 +373,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/aircraft.py</url>
-          <line>295</line>
+          <line>297</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
