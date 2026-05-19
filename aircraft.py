@@ -73,7 +73,6 @@ def SaveFlights(aircrafts, filename):
     new_file.close()
     return
 
-
 def AddAircraft(aircrafts, new_aircraft):
     i=0
     end=False
@@ -93,7 +92,6 @@ def AddAircraft(aircrafts, new_aircraft):
     if end==False:
         aircrafts.append(new_aircraft)
     return aircrafts
-
 
 def RemoveAircraft(aircrafts, landing_time, extra_info):
     i=0
@@ -211,9 +209,9 @@ def LongDistanceArrivals(aircrafts,airports,filename):
     new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
     new_file.write("<Document>\n")
     i = 0
-    while i < len(aircrafts):
+    while i<len(aircrafts):
         j = 0
-        while j < len(airports):
+        while j<len(airports):
             if aircrafts[i].icao_origin==airports[j].icao_code:
                 bcnlat=41.296944
                 bcnlon=2.078333
