@@ -238,6 +238,15 @@ def LongDistanceArrivals(aircrafts,airports,filename):
     new_file.close()
     return
 
+def LoadDepartures(filename):
+    return
+
+def MergeMovements(arrivals, departures):
+    return
+
+def NightAircraft (aircrafts):
+    return
+
 # test section
 if __name__ == "__main__":
     aircrafts=LoadArrivals("Arrivals.txt")

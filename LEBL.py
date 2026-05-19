@@ -170,6 +170,12 @@ def PrintOccupancy(bcn):
             f"Status: {status}\n\n")
     return info
 
+def AssignNightGates (bcn, aircrafts):
+    return
+
+def FreeGate (bcn, id):
+    return
+
 if __name__ == "__main__":
     print(LoadAirportStructure("Terminals.txt"))
     test_area=BoardingArea("Area A", "Schengen")
