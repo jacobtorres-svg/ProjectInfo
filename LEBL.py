@@ -176,6 +176,12 @@ def AssignNightGates (bcn, aircrafts):
 def FreeGate (bcn, id):
     return
 
+def AssignGatesAtTime (bcn, aircrafts, time):
+    return
+
+def PlotDayOccupancy (bcn, aircrafts):
+    return
+
 if __name__ == "__main__":
     print(LoadAirportStructure("Terminals.txt"))
     test_area=BoardingArea("Area A", "Schengen")
