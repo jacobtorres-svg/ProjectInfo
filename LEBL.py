@@ -125,12 +125,12 @@ def SearchTerminal (bcn, name):
 
 def AssignGate (bcn,aircraft):
     try:
-        terminal_name = SearchTerminal(bcn, aircraft.icao_airline)
+        terminal_name=SearchTerminal(bcn, aircraft.icao_airline)
         if not terminal_name:
             return -1
         sche_prefixes = ['LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG', 'EH', 'LH', 'BI',
                          'LI', 'EV', 'EY', 'EL', 'LM', 'EN', 'EP', 'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS']
-        tipo_vuelo = "Schengen" if aircraft.icao_origin[:2] in sche_prefixes else "non-Schengen"
+        type_flight="Schengen" if aircraft.icao_origin[:2] in sche_prefixes else "non-Schengen"
         i = 0
         found = False
         while i < len(bcn.list_terminal) and not found:
@@ -139,14 +139,13 @@ def AssignGate (bcn,aircraft):
                 j = 0
                 while j < len(terminal.list_obj) and not found:
                     area = terminal.list_obj[j]
-                    if area.sche.strip() == tipo_vuelo:
+                    if area.sche.strip() == type_flight:
                         k = 0
                         while k < len(area.gate_list) and not found:
                             gate = area.gate_list[k]
                             if gate.occupancy is None or gate.occupancy == False:
                                 gate.occupancy = True
                                 gate.aircraft=aircraft.id
-                                print(gate.aircraft)
                                 found = True
                             k += 1
                     j += 1

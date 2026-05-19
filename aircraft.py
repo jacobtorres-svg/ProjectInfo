@@ -42,9 +42,7 @@ def PrintAircrafts(aircrafts):  #Function to write all the variables from the Ai
 
 def PlotArrivals (aircrafts):
     Vy=[0]*24
-    start=["0","0"]
     i=0
-    j=0
     while i<len(aircrafts):
         time=aircrafts[i].landing
         if ":" in time:
@@ -245,7 +243,17 @@ def MergeMovements(arrivals, departures):
     return
 
 def NightAircraft (aircrafts):
-    return
+    try:
+        night_list=[]
+        i=0
+        while i<len(aircrafts):
+            lista=aircrafts[i].split(",")
+            if lista[0].strip() !="" and lista[1].strip()=="":
+                night_list.append(aircrafts[i])
+            i+=1
+    except FileNotFoundError:
+        return[]
+    return night_list
 
 # test section
 if __name__ == "__main__":
