@@ -306,13 +306,13 @@ def MergeMovements(arrivals, departures):
         i=i+1
     return complete_flights
 
-def NightAircraft (aircrafts):
+def NightAircraft (complete_flights):
     try:
         night_list=[]
         i=0
-        while i<len(aircrafts):
-            if aircrafts[i].icao_destination!=None:
-                night_list.append(aircrafts[i])
+        while i<len(complete_flights):
+            if complete_flights[i].icao_destination!=None:
+                night_list.append(complete_flights[i])
             i+=1
     except FileNotFoundError:
         return []
