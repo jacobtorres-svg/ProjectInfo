@@ -18,6 +18,8 @@ def LoadArrivals (filename):
         arrive=file.readline() #We ride two lines in one go to skip the title
         while arrive != "":
             info=arrive.split(" ")
+            if len(info[0])<5:
+                info[0]="-"
             if len(list(info[1]))!=4:
                 info[1]="-"
             time=list(info[2])
@@ -246,6 +248,8 @@ def LoadDepartures(filename):
         depart=file.readline() #We ride two lines in one go to skip the title
         while depart != "":
             info=depart.split(" ")
+            if len(info[0])<5:
+                info[0]="-"
             if len(list(info[1]))!=4:
                 info[1]="-"
             time=list(info[2])
@@ -263,52 +267,44 @@ def LoadDepartures(filename):
         return []
     return departures
 
+
 def MergeMovements(arrivals, departures):
     complete_flights=[]
     i=0
     j=0
-    start=0
-    new=0
     end=False
     while i<len(arrivals):
-        print(new, start)
+        new=i
         while j<len(departures) and end==False:
             if arrivals[i].id==departures[j].id and arrivals[i].icao_airline==departures[i].icao_airline:
-                print(arrivals[i].id, departures[j].id, arrivals[i].icao_airline, departures[j].icao_airline)
                 if arrivals[i].landing<departures[j].departure:
-                    flight=Aircraft(arrivals[i].id,arrivals[i].icao_origin,departures[j].icao_destination,arrivals[i].landing,departures[i].departure,arrivals[i].icao_airline)
-                    print(flight.__dict__)
+                    flight=Aircraft(arrivals[i].id,arrivals[i].icao_origin,departures[j].icao_destination,arrivals[i].landing,departures[j].departure,arrivals[i].icao_airline)
                     complete_flights.append(flight)
                     end=True
-                new=new+1
+                    new=new+1
             j=j+1
         j=0
         end=False
-        print(new, start)
-        if start<=new:
+        if new==i:
             complete_flights.append(arrivals[i])
         i=i+1
     i=0
     j=0
-    start=0
-    new=0
     end=False
     while i<len(departures):
+        new=i
         while j<len(arrivals) and end==False:
             if departures[i].id==arrivals[j].id and departures[i].icao_airline==arrivals[j].icao_airline:
-                new=new+1
+                if departures[i].departure>arrivals[j].landing:
+                    end=True
+                    new=new+1
             j=j+1
         j=0
-        if start<=new:
+        end=False
+        if new==i:
             complete_flights.append(departures[i])
-            end=True
         i=i+1
     return complete_flights
-
-vuelos = MergeMovements(LoadArrivals("Arrivals.txt"), LoadDepartures("Departures.txt"))
-
-for v in vuelos:
-    print(v.__dict__)
 
 def NightAircraft (aircrafts):
     try:
@@ -324,4 +320,12 @@ def NightAircraft (aircrafts):
 
 # test section
 if __name__ == "__main__":
-    aircrafts=LoadArrivals("Arrivals.txt")
+    arrivals=LoadArrivals("Arrivals.txt")
+    departures=LoadDepartures("Departures.txt")
+    merge=MergeMovements(arrivals,departures)
+    for a in arrivals:
+        print(a.__dict__)
+    for d in departures:
+        print(d.__dict__)
+    for m in merge:
+        print(m.__dict__)
