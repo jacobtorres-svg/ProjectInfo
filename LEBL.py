@@ -30,8 +30,6 @@ def SetGates (area, init_gate, end_gate, prefix):
     while init_gate<=i<=end_gate:
         gate_name=prefix+"G"+str(i)
         new_gate=Gate(gate_name)
-        new_gate.occupied=False
-        new_gate.aircraft_id =""
         area.gate_list.append(new_gate)
         i=i+1
     return
@@ -88,7 +86,7 @@ def  GateOccupancy (bcn):
             k=0
             while k<len(area.gate_list):    #[LEBL,[T1,["Area A",schengen,GATE],abcd]]
                 gate=area.gate_list[k]  #We look at GATE
-                if gate.occupied:
+                if gate.occupancy:
                     status="Occupied"
                     code=gate.aircraft
                 else:
@@ -133,31 +131,34 @@ def AssignGate (bcn,aircraft):
         type_flight="Schengen" if aircraft.icao_origin[:2] in sche_prefixes else "non-Schengen"
         i = 0
         found = False
-        while i < len(bcn.list_terminal) and not found:
-            terminal = bcn.list_terminal[i]
-            if terminal.name == terminal_name:
-                j = 0
-                while j < len(terminal.list_obj) and not found:
-                    area = terminal.list_obj[j]
-                    if area.sche.strip() == type_flight:
-                        k = 0
-                        while k < len(area.gate_list) and not found:
-                            gate = area.gate_list[k]
-                            if gate.occupancy is None or gate.occupancy == False:
-                                gate.occupancy = True
+        assigned_gate=None
+        while i < len(bcn.list_terminal) and found==False:
+            terminal=bcn.list_terminal[i]
+            if terminal.name==terminal_name:
+                j=0
+                while j<len(terminal.list_obj) and found==False:
+                    area=terminal.list_obj[j]
+                    if area.sche.strip()==type_flight:
+                        k=0
+                        while k<len(area.gate_list) and found==False:
+                            gate=area.gate_list[k]
+                            if gate.occupancy==None:
+                                gate.occupancy=True
                                 gate.aircraft=aircraft.id
-                                found = True
+                                assigned_gate=gate
+                                found=True
                             k += 1
                     j += 1
             i += 1
         if found:
-            return gate.occupancy
+            return assigned_gate
         else:
             return "Free"
     except Exception:
         return "error"
 
-def PrintOccupancy(bcn):
+
+def PrintOccupancy(gate):
     if gate.occupancy==True:
         status="Occupied"
         code=gate.aircraft
@@ -172,7 +173,6 @@ def PrintOccupancy(bcn):
 def AssignNightGates (bcn, aircrafts):
     list=NightAircraft(aircrafts)
     return AssignGate(bcn,list)
-
 
 def FreeGate (bcn, id):
     return
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     print(f"Número de puertas creadas: {len(test_area.gate_list)}")
 
     for gate in test_area.gate_list:
-        print(f"Puerta: {gate.name} | Ocupada: {gate.occupied} | Avión: '{gate.aircraft}'")
+        print(f"Puerta: {gate.name} | Ocupada: {gate.occupancy} | Avión: '{gate.aircraft}'")
 
     mi_terminal = Terminal("T1")
     LoadAirlines(mi_terminal, "T1")
@@ -207,8 +207,10 @@ if __name__ == "__main__":
     aeropuerto = LoadAirportStructure("Terminals.txt") #bcn
 
     for un_avion in aviones:
-        resultado = AssignGate(aeropuerto, un_avion)
-        print ("it's",PrintOccupancy(aeropuerto))
-        if resultado != -1:
-            print(f"Aerolinea {un_avion.icao_airline}: {resultado}")
+        puerta_asignada = AssignGate(aeropuerto, un_avion)
+        if puerta_asignada != -1 and not isinstance(puerta_asignada, str):
+            print("it's", PrintOccupancy(puerta_asignada))
+            print(f"Aerolinea {un_avion.icao_airline}: Asignada a {puerta_asignada.name}")
+        else:
+            print(f"No se pudo asignar puerta al avión {un_avion.id}")
     print(SearchTerminal(aeropuerto, "VLG"))
