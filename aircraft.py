@@ -311,7 +311,7 @@ def NightAircraft (complete_flights):
         night_list=[]
         i=0
         while i<len(complete_flights):
-            if complete_flights[i].icao_destination!=None:
+            if complete_flights[i].icao_origin==None and complete_flights[i].icao_destination!=None:
                 night_list.append(complete_flights[i])
             i+=1
     except FileNotFoundError:
@@ -323,9 +323,9 @@ if __name__ == "__main__":
     arrivals=LoadArrivals("Arrivals.txt")
     departures=LoadDepartures("Departures.txt")
     merge=MergeMovements(arrivals,departures)
-    for a in arrivals:
-        print(a.__dict__)
-    for d in departures:
-        print(d.__dict__)
+    night=NightAircraft(merge)
     for m in merge:
         print(m.__dict__)
+    print("\n\n\n")
+    for n in night:
+        print(n.__dict__)
