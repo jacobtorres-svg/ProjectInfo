@@ -269,14 +269,22 @@ def MergeMovements(arrivals, departures):
     j=0
     start=0
     new=0
+    end=False
     while i<len(arrivals):
-        while j<len(departures):
+        print(new, start)
+        while j<len(departures) and end==False:
             if arrivals[i].id==departures[j].id and arrivals[i].icao_airline==departures[i].icao_airline:
-                flight=Aircraft(arrivals[i].id,arrivals[i].icao_origin,departures[j].icao_destination,arrivals[i].landing,departures[i].departure,arrivals[i].icao_airline)
-                complete_flights.append(flight)
+                print(arrivals[i].id, departures[j].id, arrivals[i].icao_airline, departures[j].icao_airline)
+                if arrivals[i].landing<departures[j].departure:
+                    flight=Aircraft(arrivals[i].id,arrivals[i].icao_origin,departures[j].icao_destination,arrivals[i].landing,departures[i].departure,arrivals[i].icao_airline)
+                    print(flight.__dict__)
+                    complete_flights.append(flight)
+                    end=True
                 new=new+1
             j=j+1
         j=0
+        end=False
+        print(new, start)
         if start<=new:
             complete_flights.append(arrivals[i])
         i=i+1
@@ -284,30 +292,34 @@ def MergeMovements(arrivals, departures):
     j=0
     start=0
     new=0
+    end=False
     while i<len(departures):
-        while j<len(arrivals):
-            if departures[i].id==arrivals[j].id and departures[i].icao_airline==arrivals[i].icao_airline:
+        while j<len(arrivals) and end==False:
+            if departures[i].id==arrivals[j].id and departures[i].icao_airline==arrivals[j].icao_airline:
                 new=new+1
             j=j+1
         j=0
         if start<=new:
             complete_flights.append(departures[i])
+            end=True
         i=i+1
     return complete_flights
 
-print(MergeMovements(LoadArrivals("Arrivals.txt"),LoadDepartures("Departures.txt")))
+vuelos = MergeMovements(LoadArrivals("Arrivals.txt"), LoadDepartures("Departures.txt"))
+
+for v in vuelos:
+    print(v.__dict__)
 
 def NightAircraft (aircrafts):
     try:
         night_list=[]
         i=0
         while i<len(aircrafts):
-            lista=aircrafts[i].split(",")
-            if lista[0].strip() !="" and lista[1].strip()=="":
+            if aircrafts[i].icao_destination!=None:
                 night_list.append(aircrafts[i])
             i+=1
     except FileNotFoundError:
-        return[]
+        return []
     return night_list
 
 # test section
