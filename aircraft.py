@@ -37,7 +37,7 @@ def LoadArrivals (filename):
         return []
     return arrivals
 
-def PrintAircrafts(aircrafts):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
+def PrintAirrivals(aircrafts):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
     info = (f"ID: {aircrafts.id}\n"
             f"Origin: {aircrafts.icao_origin}\n"
             f"Landing time: {aircrafts.landing}\n"
@@ -267,6 +267,12 @@ def LoadDepartures(filename):
         return []
     return departures
 
+def PrintDepartures(aircrafts):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
+    info = (f"ID: {aircrafts.id}\n"
+            f"Destination: {aircrafts.icao_destination}\n"
+            f"Departure time: {aircrafts.departure}\n"
+            f"Aircraft: {aircrafts.icao_airline}\n\n")
+    return info
 
 def MergeMovements(arrivals, departures):
     complete_flights=[]

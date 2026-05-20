@@ -171,50 +171,75 @@ def ShowMap():  #Function to create the code for the Google Earth to place all t
     return
 
 #---AIRPORT SECTION---
-aircrafts_file=None  #We put the aircrafts file as None so the default state is without any information, and we can add whatever file we want
-aircrafts=[] #We put the aircrafts as a list, just like it was in the aircraft
+arrivals_file=None  #We put the aircrafts file as None so the default state is without any information, and we can add whatever file we want
+arrivals=[] #We put the aircrafts as a list, just like it was in the aircraft
+departures_file=None
+departures=[]
 
-def LoadAricrafts():
-    global aircrafts,aircrafts_file
+def LoadArrival():
+    global arrivals,arrivals_file
     filename=filedialog.askopenfilename(title="Select airports file")  # Similar to putting a variable=input(), we ask for the file, but searching in our files
     if filename:
-        aircrafts=LoadArrivals(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
-        aircrafts_file=filename  # We clarify, globally, that now there's a file for the airports
-        text_area.insert(tk.END, f"Loaded {len(aircrafts)} airports from {filename}\n")
+        arrivals=LoadArrivals(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
+        arrivals_file=filename  # We clarify, globally, that now there's a file for the airports
+        text_area.insert(tk.END, f"Loaded {len(arrivals)} airports from {filename}\n")
     text_area.see(tk.END)
     return
 
-def ShowAircrafts(): #Function to show all the current information from all the current airports in the list
-    if len(aircrafts)==0:
-        messagebox.showwarning("No Data","No aircrafts loaded.")
+def LoadDeparture():
+    global departures,departures_file
+    filename=filedialog.askopenfilename(title="Select airports file")  # Similar to putting a variable=input(), we ask for the file, but searching in our files
+    if filename:
+        departures=LoadDepartures(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
+        departures_file=filename  # We clarify, globally, that now there's a file for the airports
+        text_area.insert(tk.END, f"Loaded {len(departures)} airports from {filename}\n")
+    text_area.see(tk.END)
+    return
+
+def ShowArrivals(): #Function to show all the current information from all the current airports in the list
+    if len(arrivals)==0:
+        messagebox.showwarning("No Data","No arrivals loaded.")
         return
-    text_area.insert(tk.END,"---Aircrafts---\n")
+    text_area.insert(tk.END,"---Arrivals---\n")
     i=0
-    while i<len(aircrafts):
-        info=PrintAircrafts(aircrafts[i])
+    while i<len(arrivals):
+        info=PrintAirrivals(arrivals[i])
+        text_area.insert(tk.END,info)
+        i=i+1
+    text_area.see(tk.END)
+    return
+
+def ShowDepartures(): #Function to show all the current information from all the current airports in the list
+    if len(departures)==0:
+        messagebox.showwarning("No Data","No departures loaded.")
+        return
+    text_area.insert(tk.END,"---Departures---\n")
+    i=0
+    while i<len(departures):
+        info=PrintDepartures(departures[i])
         text_area.insert(tk.END,info)
         i=i+1
     text_area.see(tk.END)
     return
 
 def SaveArrivals(): #Function to save all the Schengen airports into a separate file of our choice
-    if len(aircrafts)==0:
+    if len(arrivals)==0:
         messagebox.showwarning("No Data","No arrivals loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save Arrivals",defaultextension=".txt")
     if filename:
-        SaveFlights(aircrafts,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
+        SaveFlights(arrivals,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
         text_area.insert(tk.END,f"Arrivals saved to {filename}\n")
     text_area.see(tk.END)
     return
 
 def AddNewAircraft(principal): #Function to have the button to ask to add a new airport
-    if len(aircrafts)==0:
-        messagebox.showwarning("No Data","No aircrafts loaded.")
+    if len(arrivals)==0:
+        messagebox.showwarning("No Data","No arrivals loaded.")
         return
     def AddAction():
-        global aircrafts
-        original_length=len(aircrafts)
+        global arrivals
+        original_length=len(arrivals)
         id=id_entry.get().strip().upper()
         origin=origin_entry.get().strip().upper()
         landing=landing_entry.get().strip()
@@ -228,8 +253,8 @@ def AddNewAircraft(principal): #Function to have the button to ask to add a new 
         elif len(airline)!=3:
             messagebox.showwarning("Input Error", "Airline code must be 3 characters.")
         elif id and origin and landing and airline:
-            aircrafts=AddAircraft(aircrafts,Aircraft(id,origin,landing,airline))
-            if len(aircrafts)==original_length:
+            arrivals=AddAircraft(arrivals,Aircraft(id,origin,landing,airline))
+            if len(arrivals)==original_length:
                 messagebox.showwarning("Input Error", "That arrival already exists.")
             else:
                 text_area.insert(tk.END, f"Added arrival from {origin} at {landing}\n")
@@ -267,17 +292,17 @@ def AddNewAircraft(principal): #Function to have the button to ask to add a new 
     return
 
 def DeleteAircraft(principal):   #Function to have the button to ask to delete an airport
-    if len(aircrafts)==0:
+    if len(arrivals)==0:
         messagebox.showwarning("No Data","No airports loaded.")
         return
     def RemoveAction():
-        global aircrafts
-        original_length=len(aircrafts)
+        global arrivals
+        original_length=len(arrivals)
         time= time_entry.get().strip()
         info= info_entry.get().strip().upper()
         if ":" in time and info:
-            aircrafts=RemoveAircraft(aircrafts,time,info)
-            if len(aircrafts)==original_length:
+            arrivals=RemoveAircraft(arrivals,time,info)
+            if len(arrivals)==original_length:
                 messagebox.showwarning("Input Error", "That arrival doesn't exist.")
             else:
                 text_area.insert(tk.END, f"Search completed for {time} - {info}\n")
@@ -311,48 +336,48 @@ def GraphAirlines():    #Function to ask for the plot to create a graph of Schen
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
-    if len(aircrafts)==0:
+    if len(arrivals)==0:
         messagebox.showwarning("No Data", "No arrivals loaded.")
         return
 
-    PlotAirlines(aircrafts)  #We call the PlotAirlines from the airport to do the graph
+    PlotAirlines(arrivals)  #We call the PlotAirlines from the airport to do the graph
     return
 
 def GraphFlightType():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
-    elif len(aircrafts)==0:
+    elif len(arrivals)==0:
         messagebox.showwarning("No Data", "No arrivals loaded.")
         return
     elif airports[0].sche==None:
         messagebox.showwarning("Input Error","No Schengen stablished.")
     else:
-        PlotFlightsType(aircrafts)  #We call the PlotFlightsType from the airport to do the graph
+        PlotFlightsType(arrivals)  #We call the PlotFlightsType from the airport to do the graph
     return
 
 def ShowMapRoute():  #Function to create the code for the Google Earth to place all the flight routes
-    if len(aircrafts)==0:
+    if len(arrivals)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
-    if len(aircrafts)==0:
+    if len(arrivals)==0:
         messagebox.showwarning("No Data", "No arrivals loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save the route",defaultextension=".kml")
-    MapFlights(aircrafts,airports,filename)  #We call the PlotAirports from the airport to do the graph
+    MapFlights(arrivals,airports,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     text_area.see(tk.END)
     return
 
 def ShowMapLongDistance():  #Function to create the code for the Google Earth to place all the long distance flights
-    if len(aircrafts)==0:
+    if len(arrivals)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
-    if len(aircrafts)==0:
+    if len(arrivals)==0:
         messagebox.showwarning("No Data", "No arrivals loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save long distance",defaultextension=".kml")
-    LongDistanceArrivals(aircrafts,airports,filename)  #We call the PlotAirports from the airport to do the graph
+    LongDistanceArrivals(arrivals,airports,filename)  #We call the PlotAirports from the airport to do the graph
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     text_area.see(tk.END)
     return
@@ -374,14 +399,14 @@ def LoadTerminals():
     return
 
 def AssignGates():
-    global gate_info, bcn, aircrafts
+    global gate_info, bcn, arrivals
     try:
         if len(gate_info)==0:
             messagebox.showwarning("No Data","No Terminals loaded.")
             return
         i=0
-        while i<len(aircrafts):
-            AssignGate(bcn,aircrafts[i])
+        while i<len(arrivals):
+            AssignGate(bcn,arrivals[i])
             i=i+1
         gate_info=GateOccupancy(bcn)
         text_area.insert(tk.END,"Updated Gates occupancy.\n")
@@ -392,7 +417,7 @@ def AssignGates():
 
 def ShowGateInfo(): #Function to show all the current information from all the current airports in the list
     if len(gate_info)==0:
-        messagebox.showwarning("No Data","No aircrafts loaded.")
+        messagebox.showwarning("No Data","No arrivals loaded.")
         return
     text_area.insert(tk.END,"---Gate Information---\n")
     i=0
@@ -440,7 +465,8 @@ def Main():
     #buttons
     tk.Label(menu_frame, text="DATABASE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📂 Load Airports", command=LoadAirports, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📂 Load Arrivals", command=LoadAricrafts, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📂 Load Arrivals", command=LoadArrival, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📂 Load Departures", command=LoadDeparture, **button).pack(pady=5)
     tk.Button(menu_frame, text="📂 Load Terminals", command=LoadTerminals, **button).pack(pady=5)
     tk.Label(menu_frame, text="EDIT DATA", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="➕ Add Airport", command=lambda: AddNewAirport(secondary), **button).pack(pady=5)
@@ -451,7 +477,8 @@ def Main():
     tk.Button(menu_frame, text="🛬 Assign Gates", command=AssignGates, **button).pack(pady=5)
     tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
     tk.Button(menu_frame, text="📑 Show Airport Data", command=ShowAirports, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowAircrafts, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowArrivals, **button).pack(pady=5)
+    tk.Button(menu_frame, text="📑 Show Departures Data", command=ShowDepartures, **button).pack(pady=5)
     tk.Button(menu_frame, text="📑 Show Gate Information", command=ShowGateInfo, **button).pack(pady=5)
     tk.Button(menu_frame, text="💾 Save Schengen to File", command=SaveSchengen, **button).pack(pady=5)
     tk.Button(menu_frame, text="💾 Save Arrivals to File", command=SaveArrivals, **button).pack(pady=5)
@@ -459,7 +486,7 @@ def Main():
     tk.Button(menu_frame, text="📈 Plot Schengen/Type", command=GraphAirports, **button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot Airlines' Stats", command=GraphAirlines, **button).pack(pady=5)
     tk.Button(menu_frame, text="📈 Plot Schengen/Type arrivals", command=GraphFlightType, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📈 Plot Arrivals per Hour",command=lambda: PlotArrivals(aircrafts),**button).pack(pady=5)
+    tk.Button(menu_frame, text="📈 Plot Arrivals per Hour",command=lambda: PlotArrivals(arrivals),**button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Airports", command=ShowMap, **button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Routes", command=ShowMapRoute, **button).pack(pady=5)
     tk.Button(menu_frame, text="📍 Show Long Distance Flights", command=ShowMapLongDistance, **button).pack(pady=5)
