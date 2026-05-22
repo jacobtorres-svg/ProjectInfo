@@ -12,10 +12,6 @@
 <br>
 
   <a href="https://drive.google.com/file/d/1xP4IGK5QutixxtmZfPwN_xYWmxbozQIz/view?usp=sharing" class="video">Click to go to the video of our version 1.0!</a>
-</div>
 
-
-<br>
-
- <a href="https://drive.google.com/file/d/146ZG4rBdLoMVzKdD20encpU5-y7WF73r/view?usp=sharing" class="video">Click to go to the video of our version 2.0!</a>
+  <a href="https://drive.google.com/file/d/146ZG4rBdLoMVzKdD20encpU5-y7WF73r/view?usp=sharing" class="video">Click to go to the video of our version 2.0!</a>
 </div>
