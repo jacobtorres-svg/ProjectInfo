@@ -129,8 +129,8 @@ def AssignGate (bcn,aircraft):
         sche_prefixes = ['LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG', 'EH', 'LH', 'BI',
                          'LI', 'EV', 'EY', 'EL', 'LM', 'EN', 'EP', 'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS']
         type_flight="Schengen" if aircraft.icao_origin[:2] in sche_prefixes else "non-Schengen"
-        i = 0
-        found = False
+        i=0
+        found=False
         assigned_gate=None
         while i < len(bcn.list_terminal) and found==False:
             terminal=bcn.list_terminal[i]
@@ -142,7 +142,7 @@ def AssignGate (bcn,aircraft):
                         k=0
                         while k<len(area.gate_list) and found==False:
                             gate=area.gate_list[k]
-                            if gate.occupancy==None:
+                            if not gate.occupancy:
                                 gate.occupancy=True
                                 gate.aircraft=aircraft.id
                                 assigned_gate=gate
@@ -184,7 +184,6 @@ def PlotDayOccupancy (bcn, aircrafts):
     return
 
 if __name__ == "__main__":
-    print(LoadAirportStructure("Terminals.txt"))
     test_area=BoardingArea("Area A", "Schengen")
     inicio=1
     fin=11
@@ -198,11 +197,10 @@ if __name__ == "__main__":
     for gate in test_area.gate_list:
         print(f"Puerta: {gate.name} | Ocupada: {gate.occupancy} | Avión: '{gate.aircraft}'")
 
-    mi_terminal = Terminal("T1")
-    LoadAirlines(mi_terminal, "T1")
+    mi_terminal = Terminal("T2")
+    LoadAirlines(mi_terminal, "T2")
     print(f"Terminal: {mi_terminal.name}")
     print(f"Codes: {mi_terminal.list_code}")
-    print(GateOccupancy(LoadAirportStructure("Terminals.txt")))
     aviones = LoadArrivals("Arrivals.txt") #aircrafts from aircrafts
     aeropuerto = LoadAirportStructure("Terminals.txt") #bcn
 

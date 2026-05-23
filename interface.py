@@ -182,7 +182,7 @@ def LoadArrival():
     if filename:
         arrivals=LoadArrivals(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
         arrivals_file=filename  # We clarify, globally, that now there's a file for the airports
-        text_area.insert(tk.END, f"Loaded {len(arrivals)} airports from {filename}\n")
+        text_area.insert(tk.END, f"Loaded {len(arrivals)} arrivals from {filename}\n")
     text_area.see(tk.END)
     return
 
@@ -192,7 +192,7 @@ def LoadDeparture():
     if filename:
         departures=LoadDepartures(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
         departures_file=filename  # We clarify, globally, that now there's a file for the airports
-        text_area.insert(tk.END, f"Loaded {len(departures)} airports from {filename}\n")
+        text_area.insert(tk.END, f"Loaded {len(departures)} departures from {filename}\n")
     text_area.see(tk.END)
     return
 
@@ -356,6 +356,19 @@ def GraphFlightType():    #Function to ask for the plot to create a graph of Sch
         PlotFlightsType(arrivals)  #We call the PlotFlightsType from the airport to do the graph
     return
 
+def GraphArrivals():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
+    if len(airports)==0:
+        messagebox.showwarning("No Data", "No airports loaded.")
+        return
+    elif len(arrivals)==0:
+        messagebox.showwarning("No Data", "No arrivals loaded.")
+        return
+    elif airports[0].sche==None:
+        messagebox.showwarning("Input Error","No Schengen stablished.")
+    else:
+        PlotArrivals(arrivals)  #We call the PlotFlightsType from the airport to do the graph
+    return
+
 def ShowMapRoute():  #Function to create the code for the Google Earth to place all the flight routes
     if len(arrivals)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
@@ -386,6 +399,7 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
 terminals_file=None  #We put the terminals file as None so the default state is without any information, and we can add whatever file we want
 gate_info=[] #We put the gate information as a list, just like it was in the LEBL
 bcn=[]
+map = None
 
 def LoadTerminals():
     global terminals_file, gate_info, bcn
@@ -399,7 +413,7 @@ def LoadTerminals():
     return
 
 def AssignGates():
-    global gate_info, bcn, arrivals
+    global gate_info, bcn, arrivals, map
     try:
         if len(gate_info)==0:
             messagebox.showwarning("No Data","No Terminals loaded.")
@@ -411,6 +425,8 @@ def AssignGates():
         gate_info=GateOccupancy(bcn)
         text_area.insert(tk.END,"Updated Gates occupancy.\n")
         text_area.see(tk.END)
+        if 'map' in globals() and map and tk.Toplevel.winfo_exists(map.root):
+            map.ChangeTerminals(map.updated)
     except ValueError:
         return
     return
@@ -428,8 +444,120 @@ def ShowGateInfo(): #Function to show all the current information from all the c
     text_area.see(tk.END)
     return
 
+#---EXTRA CONTENT: VISUALIZATION OF THE GATES---
+class AirportVisualizer:
+    def __init__(self, airport=None):
+        self.root = tk.Toplevel()
+        self.root.title("Map of the occupancy") #Title of the window
+        self.root.geometry("1100x750")  #Dimensions of the window
+        self.root.configure(bg="#f4f7f9")   #Background color
+        self.airport=airport
+        self.updated=0
+        #Selection of terminal (frame and buttons)
+        control_frame=tk.Frame(self.root, bg="#f4f7f9")
+        control_frame.pack(fill=tk.X, padx=15, pady=10)
+        tk.Label(control_frame, text="Select Terminal:", font=("Helvetica", 11, "bold"), bg="#f4f7f9", fg="#34495e").pack(side=tk.LEFT, padx=5)
+        #While to specifically create buttons depending on the terminals that are in the files
+        if self.airport!=ValueError and self.airport.list_terminal:
+            terminals=self.airport.list_terminal
+            i=0
+            while i<len(terminals):
+                btn=tk.Button(control_frame,text="Terminal "+str(terminals[i].name),font=("Helvetica", 10, "bold"),bg="#34495e", fg="white", activebackground="#2c3e50", activeforeground="white",relief="flat", padx=10, pady=4,command=lambda i=i: self.ChangeTerminals(i))
+                btn.pack(side=tk.LEFT, padx=5)
+                i=i+1
+        #Main frame for the map of the gates with scrollbars 
+        main_frame=ttk.Frame(self.root)
+        main_frame.pack(fill=tk.BOTH, expand=True)
+        self.canvas=tk.Canvas(main_frame, bg="#f4f7f9", highlightthickness=0)
+        scroll_y=ttk.Scrollbar(main_frame, orient="vertical", command=self.canvas.yview)
+        scroll_x=ttk.Scrollbar(main_frame, orient="horizontal", command=self.canvas.xview)
+        self.canvas.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+        scroll_y.pack(side=tk.RIGHT, fill=tk.Y)
+        scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.content_frame=tk.Frame(self.canvas, bg="#f4f7f9")
+        self.canvas_window=self.canvas.create_window((0, 0), window=self.content_frame, anchor="nw")
+        self.canvas.bind("<Configure>", self.Resize)   #Detects the dimensions of the window to resize itself if needed with the Resize function
+        self.Drawing()
+        CenterWindow(self.root)
+
+    def Resize(self, click):    #Function to adjust the information according to the size of the window
+        self.content_frame.update_idletasks()
+        width=self.content_frame.winfo_reqwidth()
+        height=self.content_frame.winfo_reqheight()
+        final_width=__builtins__.max(click.width,width)
+        final_height=__builtins__.max(click.height,height)
+        self.canvas.itemconfig(self.canvas_window, width=final_width, height=final_height)
+        self.canvas.config(scrollregion=(0, 0, width, height))
+        self.root.lift()
+        return
+
+    def ChangeTerminals(self,n):    #Function to make a button of a terminal depending on the terminals that have been found on the files
+        self.updated=n
+        lista_widgets = self.content_frame.winfo_children()
+        i=0
+        while i<len(lista_widgets):
+            lista_widgets[i].destroy()
+            i=i+1
+        self.Drawing()
+        return
+
+    def Drawing(self):  #Function that actually creates the drawing of the gates
+        terminal = self.airport.list_terminal[self.updated] #The terminal (if it's T1 or T2)
+        header=tk.Frame(self.content_frame, bg="#2c3e50", height=50)
+        header.pack(fill=tk.X, padx=15, pady=15)
+        tk.Label(header, text="TERMINAL "+ str(terminal.name),fg="white", bg="#2c3e50", font=("Helvetica", 14, "bold")).pack(pady=10)
+        #The drawing space
+        areas_frame=tk.Frame(self.content_frame, bg="#f4f7f9")
+        areas_frame.pack(padx=20, pady=10)
+        i=0
+        while i<len(terminal.list_obj): #We look at how many gates we have 
+            #Area
+            area_container=tk.Frame(areas_frame, bg="#ffffff", bd=1, relief="flat", padx=15)
+            area_container.pack(side=tk.LEFT, anchor="n", padx=10)
+            tk.Label(area_container, text=terminal.list_obj[i].name, font=("Helvetica", 11, "bold"),bg="#ffffff", fg="#34495e").pack(pady=10)   #The area with its name (ex. A)
+            gate_canvas=tk.Canvas(area_container, width=190, bg="#ffffff", highlightthickness=0)
+            gate_canvas.pack()
+            y=30    #Parameter to be able to put the gates at different heights in the line of the area
+            #Gates
+            gates=terminal.list_obj[i].gate_list
+            j=0
+            while j<len(gates):
+                if gates[j].occupancy==True:    #If the gate is occupied it's red
+                    text_display=gates[j].aircraft
+                    color = "#d9534f"
+                else:   #If it's free it's green
+                    text_display=gates[j].name
+                    color="#5cb85c"
+                if j%2==0:  #If the gate is an even number it goes to the right
+                    gate_canvas.create_line(80, y, 55, y, fill="#2c3e50", width=2)
+                    gate_canvas.create_rectangle(15, y - 12, 75, y + 12, fill=color, outline="#2c3e50")
+                    gate_canvas.create_text(45, y, text=text_display, font=("Helvetica", 8, "bold"), fill="white")
+                else:  #If the gate is an odd number it goes to the left
+                    gate_canvas.create_line(110,y,135,y,fill="#2c3e50",width=2)
+                    gate_canvas.create_rectangle(115,y-12,175,y+12,fill=color,outline="#2c3e50")
+                    gate_canvas.create_text(145,y,text=text_display,font=("Helvetica",8,"bold"),fill="white")
+                    y=y+45
+                j=j+1
+            gate_canvas.create_rectangle(80, 0, 110, y, fill="#2c3e50", outline="")
+            gate_canvas.config(height=y+40)
+            i=i+1
+        self.root.update_idletasks()
+        width=self.content_frame.winfo_reqwidth()
+        height=self.content_frame.winfo_reqheight()
+        self.canvas.config(scrollregion=(0, 0,width,height))
+        return
+
+def OpenOccupancyMap():
+    global bcn, map
+    try:
+        map=AirportVisualizer(bcn)
+    except:
+        messagebox.showwarning("No Data","No terminals loaded.")
+    return
+
 #---INTERFACE AESTHETICS---
-def CenterWindow(window):
+def CenterWindow(window):   #Function to ensure that all the pop-up (and main interface) are come in the center of the screen
     window.update_idletasks()
     width=window.winfo_width()
     height=window.winfo_height()
@@ -438,69 +566,102 @@ def CenterWindow(window):
     window.geometry(f'{width}x{height}+{x}+{y}')
     return
 
-text_area=None  # We start with an empty text interface
+text_area=None  #We start with an empty text interface
 button = {"bg": "#2c3e50","fg": "#f0f3f5","font":("Segoe UI", 10, "bold"),"relief": "flat","padx": 10,"pady": 5,"width": 30,"cursor": "hand2"}
 
-def Main():
+def Main(): #All the buttons, text area and details of the main interface
     global text_area, secondary
+    #Title
     secondary=tk.Tk()
-    secondary.title("Airport & Flight Manager")
+    secondary.title("LEBL - Flight Control System")
     secondary.geometry("1100x850")
-    secondary.configure(bg="#f0f3f5")
-    #header
-    header=tk.Label(secondary,text="FLIGHT CONTROL SYSTEM",font=("Segoe UI", 18, "bold"),bg="#2c3e50",fg="white",pady=10)
-    header.pack(fill="x")
-    #main interface
-    main_container = tk.Frame(secondary, bg="#f0f3f5")
+    secondary.configure(bg="#f4f7f9")
+    #Colors
+    main_color="#2c3e50"
+    icon_color="#ecf0f1"
+    hover_color="#496785"
+    #Buttons from the small menu
+    menus={
+        "Load":[("Airports", LoadAirports), ("Arrivals", LoadArrival),("Departures", LoadDeparture), ("Terminals", LoadTerminals)],
+        "Save":[("Schengen to File", SaveSchengen), ("Arrivals to File", SaveArrivals)],
+        "Add":[("Airport", lambda: AddNewAirport(secondary)), ("Aircraft", lambda: AddNewAircraft(secondary))],
+        "Delete":[("Airport", lambda: DeleteAirport(secondary)), ("Aircraft", lambda: DeleteAircraft(secondary))],
+        "Show":[("Set Schengen", SetNewSchengen),("Set Gates", AssignGates),("Airport Data", ShowAirports), ("Arrivals Data", ShowArrivals),("Departures Data", ShowDepartures), ("Gate Information", ShowGateInfo)],
+        "Plots":[("Schengen/Type", GraphAirports), ("Airlines' Stats", GraphAirlines), ("Arrivals Stats", GraphFlightType),("Arrivals per Hour", GraphArrivals)],
+        "Earth":[("Show Airports", ShowMap), ("Show Routes", ShowMapRoute),("Show long distance Routes", ShowMapLongDistance)],
+        "Terminal":[("Airport Map", OpenOccupancyMap)]
+    }
+
+    def OpenMenu(click, category):
+        if secondary=="active" and secondary.active.winfo_exists():    #It destroys the small pop-up if it previously existed (so that you can only open one at a time)
+            secondary.active.destroy()
+        #The pop-up
+        menu_popup=tk.Toplevel(secondary)
+        menu_popup.overrideredirect(True)  #We delete the borders
+        secondary.active=menu_popup
+        x=secondary.winfo_rootx()+60
+        y=click.y_root-10
+        menu_popup.geometry(f"+{x}+{y}")
+        #Format of information inside
+        btn_style={"bg": "#2c3e50","fg": "#ecf0f1","activebackground": hover_color,"activeforeground": "white","font": ("Segoe UI", 10),"anchor": "w","bd": 0,"padx": 20,"pady": 10,"cursor": "hand2"}
+        options = menus.get(category, [])    #Creates the options depending on the information provided (so it's easier to add/delete buttons)
+        i=0
+        while i<len(options):
+            info=options[i]
+            btn=tk.Button(menu_popup, text=info[0],command=lambda f=info[1]: [f(),menu_popup.destroy()],**btn_style)
+            btn.pack(fill="x")
+            i=i+1
+
+        def Close(e):   #Function to automatically close the pop-up if clicked outside of it
+            try:
+                if menu_popup.winfo_exists():
+                    x,y=secondary.winfo_pointerxy()
+                    widget=secondary.winfo_containing(x,y)
+                    if widget==None or str(widget).find(str(menu_popup))==-1:   #It indicates clicking outside the pop-up
+                        menu_popup.destroy()
+                        secondary.unbind_all("<Button-1>")
+            except:
+                return
+        secondary.after(100, lambda: secondary.bind_all("<Button-1>", Close))   #Small delay so it doesn't close instantly
+        return
+    #Actual design (aesthetically speaking)
+    #Header
+    header=tk.Frame(secondary, bg=main_color, height=50)
+    header.pack(side="top", fill="x")
+    header.pack_propagate(False)
+    tk.Label(header, text="☰", font=("Arial", 18), bg=main_color, fg=icon_color).pack(side="left", padx=15)
+    tk.Label(header, text="LEBL FLIGHT CONTROL SYSTEM", font=("Segoe UI", 12, "bold"),bg=main_color, fg=icon_color).pack(expand=True)
+    #Bar with the icons
+    main_container=tk.Frame(secondary, bg="#f4f7f9")
     main_container.pack(fill="both", expand=True)
-    canvas = tk.Canvas(main_container, bg="#f0f3f5", width=280, highlightthickness=0)
-    canvas.pack(side="left", fill="y")
-    scroll_v = tk.Scrollbar(main_container, orient="vertical", command=canvas.yview)
-    scroll_v.pack(side="left", fill="y")
-    menu_frame = tk.Frame(canvas, padx=20, pady=20, bg="#f0f3f5")
-    #make scroll possible
-    canvas.create_window((0, 0), window=menu_frame, anchor="nw")
-    menu_frame.bind("<Configure>",lambda e:canvas.configure(scrollregion=canvas.bbox("all")))
-    canvas.configure(yscrollcommand=scroll_v.set)
-    #buttons
-    tk.Label(menu_frame, text="DATABASE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
-    tk.Button(menu_frame, text="📂 Load Airports", command=LoadAirports, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📂 Load Arrivals", command=LoadArrival, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📂 Load Departures", command=LoadDeparture, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📂 Load Terminals", command=LoadTerminals, **button).pack(pady=5)
-    tk.Label(menu_frame, text="EDIT DATA", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
-    tk.Button(menu_frame, text="➕ Add Airport", command=lambda: AddNewAirport(secondary), **button).pack(pady=5)
-    tk.Button(menu_frame, text="🗑️ Delete Airport", command=lambda: DeleteAirport(secondary), **button).pack(pady=5)
-    tk.Button(menu_frame, text="➕ Add Aircraft", command=lambda: AddNewAircraft(secondary), **button).pack(pady=5)
-    tk.Button(menu_frame, text="🗑️ Delete Aircraft", command=lambda: DeleteAircraft(secondary), **button).pack(pady=5)
-    tk.Button(menu_frame, text="✈️ Set Schengen Attribute", command=SetNewSchengen, **button).pack(pady=5)
-    tk.Button(menu_frame, text="🛬 Assign Gates", command=AssignGates, **button).pack(pady=5)
-    tk.Label(menu_frame, text="VIEW & SAVE", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w",pady=(10, 0))
-    tk.Button(menu_frame, text="📑 Show Airport Data", command=ShowAirports, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📑 Show Arrivals Data", command=ShowArrivals, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📑 Show Departures Data", command=ShowDepartures, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📑 Show Gate Information", command=ShowGateInfo, **button).pack(pady=5)
-    tk.Button(menu_frame, text="💾 Save Schengen to File", command=SaveSchengen, **button).pack(pady=5)
-    tk.Button(menu_frame, text="💾 Save Arrivals to File", command=SaveArrivals, **button).pack(pady=5)
-    tk.Label(menu_frame, text="ANALYSIS & MAPS", font=("Segoe UI", 9, "bold"), bg="#f0f3f5", fg="#7f8c8d").pack(anchor="w", pady=(10, 0))
-    tk.Button(menu_frame, text="📈 Plot Schengen/Type", command=GraphAirports, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📈 Plot Airlines' Stats", command=GraphAirlines, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📈 Plot Schengen/Type arrivals", command=GraphFlightType, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📈 Plot Arrivals per Hour",command=lambda: PlotArrivals(arrivals),**button).pack(pady=5)
-    tk.Button(menu_frame, text="📍 Show Airports", command=ShowMap, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📍 Show Routes", command=ShowMapRoute, **button).pack(pady=5)
-    tk.Button(menu_frame, text="📍 Show Long Distance Flights", command=ShowMapLongDistance, **button).pack(pady=5)
-    #text display
-    display_frame = tk.Frame(main_container, padx=20, pady=20, bg="#f0f3f5")
+    sidebar=tk.Frame(main_container, bg=main_color, width=60)
+    sidebar.pack(side="left", fill="y")
+    sidebar.pack_propagate(False)
+    #Terminal (where the information appears), clear button and scrollbar
+    display_frame = tk.Frame(main_container, bg="#f4f7f9", padx=25, pady=25)
     display_frame.pack(side="right", fill="both", expand=True)
-    tk.Label(display_frame, text="Output Terminal", font=("Consolas", 10), bg="#f0f3f5").pack(anchor="w")
-    text_area = tk.Text(display_frame, height=15, width=80, font=("Consolas", 10),bg="white", fg="#2c3e50", relief="solid", borderwidth=1)
-    text_area.pack(fill="both", expand=True)
-    #scrollbar
-    scrollbar=tk.Scrollbar(text_area)
+    title_bar = tk.Frame(display_frame, bg="#f4f7f9")
+    title_bar.pack(fill="x", pady=(0, 5))
+    tk.Label(title_bar, text="TERMINAL OUTPUT", font=("Segoe UI", 8, "bold"), fg="#adb5bd", bg="#f4f7f9").pack(side="left")
+    tk.Button(title_bar, text="CLEAR TERMINAL 🗑️", font=("Segoe UI", 7, "bold"), fg="#d9534f", bg="#f4f7f9", bd=0, command=lambda: text_area.delete('1.0', tk.END)).pack(side="right")
+    text_container = tk.Frame(display_frame, bg="white", highlightthickness=1, highlightbackground="#d1d9e0")
+    text_container.pack(fill="both", expand=True)
+    scrollbar = tk.Scrollbar(text_container)
     scrollbar.pack(side="right", fill="y")
-    text_area.config(yscrollcommand=scrollbar.set)
+    text_area = tk.Text(text_container, font=("Consolas", 11), bg="white", fg=main_color,relief="flat", padx=15, pady=15, yscrollcommand=scrollbar.set)
+    text_area.pack(side="left", fill="both", expand=True)
     scrollbar.config(command=text_area.yview)
+    #The actual buttons
+    icons = [("📁", "Load"), ("💾", "Save"), ("✚", "Add"), ("❌", "Delete"), ("📑", "Show"), ("📈", "Plots"), ("🌍", "Earth"), ("🏢", "Terminal")]
+    i=0
+    while i<len(icons): #Putting the icons in the sidebar
+        icon_text=icons[i]
+        f=tk.Frame(sidebar,bg=main_color)
+        f.pack(side="top",fill="both",expand=True)
+        lbl = tk.Label(f,text=icon_text[0],bg=main_color,fg=icon_color,font=("Segoe UI Symbol", 18),cursor="hand2")
+        lbl.place(relx=0.5, rely=0.5, anchor="center")
+        lbl.bind("<Button-1>", lambda e, c=icon_text[1]: OpenMenu(e, c))
+        i=i+1
     CenterWindow(secondary)
     secondary.mainloop()
     return
