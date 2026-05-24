@@ -1,16 +1,16 @@
 from matplotlib import pyplot
 from numpy import *
 
-class Aircraft:  #We open the class for the airport with all the variables we are going to use
+class Aircraft:
     def __init__(self,id,icao_origin,icao_destination,landing,departure,icao_airline):
-        self.id=id
-        self.icao_origin=icao_origin
-        self.icao_destination=icao_destination
-        self.landing=landing
-        self.departure=departure
-        self.icao_airline=icao_airline
+        self.id=id  #ID of the airplane
+        self.icao_origin=icao_origin    #ICAO code of the airport of origin
+        self.icao_destination=icao_destination  #ICAO code of the airport of destination
+        self.landing=landing    #Landing time
+        self.departure=departure    #Departure time
+        self.icao_airline=icao_airline  #ICAO code of the airline
 
-def LoadArrivals (filename):
+def LoadArrivals (filename):    #Function to load the arrivals
     arrivals=[]
     try:
         file=open(filename,"r")
@@ -33,18 +33,18 @@ def LoadArrivals (filename):
             arrivals.append(aircraft_class)
             arrive=file.readline()
         file.close()
-    except FileNotFoundError:   #This exception indicates that if we can't find the file instead of shooting an error it just returns an empty vector
+    except FileNotFoundError:
         return []
     return arrivals
 
-def PrintAirrivals(aircrafts):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
+def PrintAirrivals(aircrafts):  #Function to write all the variables from the arrivals
     info = (f"ID: {aircrafts.id}\n"
             f"Origin: {aircrafts.icao_origin}\n"
             f"Landing time: {aircrafts.landing}\n"
             f"Aircraft: {aircrafts.icao_airline}\n\n")
     return info
 
-def PlotArrivals (aircrafts):
+def PlotArrivals (aircrafts):   #Function to show the amount of arrivals every hour
     Vy=[0]*24
     i=0
     while i<len(aircrafts):
@@ -61,7 +61,7 @@ def PlotArrivals (aircrafts):
     pyplot.show()
     return
 
-def SaveFlights(aircrafts, filename):
+def SaveFlights(aircrafts, filename):   #Function to save all the arrivals after being processed properly
     new_file=open(filename, "w")  # We open a new file with whatever name we've input-ed
     i=0
     if len(aircrafts)>0:
@@ -75,7 +75,7 @@ def SaveFlights(aircrafts, filename):
     new_file.close()
     return
 
-def AddAircraft(aircrafts, new_aircraft):
+def AddAircraft(aircrafts, new_aircraft):   #Function to add an arrival
     i=0
     end=False
     while i<len(aircrafts) and end==False:
@@ -95,7 +95,7 @@ def AddAircraft(aircrafts, new_aircraft):
         aircrafts.append(new_aircraft)
     return aircrafts
 
-def RemoveAircraft(aircrafts, landing_time, extra_info):
+def RemoveAircraft(aircrafts, landing_time, extra_info):    #Function to remove an arrival
     i=0
     found=False
     while i<len(aircrafts) and found==False:
@@ -106,7 +106,7 @@ def RemoveAircraft(aircrafts, landing_time, extra_info):
         i=i+1
     return aircrafts
 
-def PlotAirlines(aircrafts):
+def PlotAirlines(aircrafts):    #Function to see the number of arrivals each airline has
     try:
         Vx=[]
         Vy=[]
@@ -140,7 +140,7 @@ def PlotAirlines(aircrafts):
         return
     return
 
-def PlotFlightsType(aircrafts):
+def PlotFlightsType(aircrafts): #Function to show how many of these arrivals are Schengen
     try:
         i=0
         countsche=countnosche=0
@@ -167,7 +167,7 @@ def PlotFlightsType(aircrafts):
         return
     return
 
-def MapFlights(aircrafts,airports,filename):
+def MapFlights(aircrafts,airports,filename):    #Function to create the .kml file to show the flight routes in Google Earth
     new_file=open(filename, "w")
     new_file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
@@ -205,7 +205,7 @@ def MapFlights(aircrafts,airports,filename):
     new_file.close()
     return
 
-def LongDistanceArrivals(aircrafts,airports,filename):
+def LongDistanceArrivals(aircrafts,airports,filename):  #Function to only show the long distance routes in Google Earth
     new_file = open(filename, "w")
     new_file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     new_file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
@@ -240,12 +240,12 @@ def LongDistanceArrivals(aircrafts,airports,filename):
     new_file.close()
     return
 
-def LoadDepartures(filename):
+def LoadDepartures(filename):   #Function to load the departures
     departures=[]
     try:
         file=open(filename,"r")
         file.readline()
-        depart=file.readline() #We ride two lines in one go to skip the title
+        depart=file.readline() #We read two lines in one go to skip the title
         while depart != "":
             info=depart.split(" ")
             if len(info[0])<5:
@@ -267,14 +267,14 @@ def LoadDepartures(filename):
         return []
     return departures
 
-def PrintDepartures(aircrafts):  #Function to write all the variables from the Airport class, but updated with our current input-ed airport
+def PrintDepartures(aircrafts):  #Function to write all the variables from the departures
     info = (f"ID: {aircrafts.id}\n"
             f"Destination: {aircrafts.icao_destination}\n"
             f"Departure time: {aircrafts.departure}\n"
             f"Aircraft: {aircrafts.icao_airline}\n\n")
     return info
 
-def MergeMovements(arrivals, departures):
+def MergeMovements(arrivals, departures):   #Function to combine arrivals and departures information
     complete_flights=[]
     i=0
     j=0
@@ -312,7 +312,7 @@ def MergeMovements(arrivals, departures):
         i=i+1
     return complete_flights
 
-def NightAircraft (complete_flights):
+def NightAircraft (complete_flights):   #Function to indicate which airplanes stayed over from the previous day
     try:
         night_list=[]
         i=0

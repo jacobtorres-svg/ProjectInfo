@@ -1,18 +1,18 @@
 from matplotlib import pyplot
 
-class Airport:  #We open the class for the airport with all the variables we are going to use
+class Airport:
     def __init__(self,icao_code,latitude,longitude):
-        self.icao_code=icao_code
-        self.latitude=latitude
-        self.longitude=longitude
-        self.sche=None
+        self.icao_code=icao_code    #ICAO code of the airport
+        self.latitude=latitude  #Airport's latitude
+        self.longitude=longitude    #Airport's longitude
+        self.sche=None  #The Schengen parameter
 
 def IsSchengenAirport(code):    #Function to check if the code of the input-ed airport is Schengen
     i=0
     sche=['LO', 'EB', 'LK', 'LC', 'EK', 'EE', 'EF', 'LF', 'ED', 'LG', 'EH', 'LH', 'BI', 'LI', 'EV', 'EY', 'EL', 'LM',
             'EN', 'EP', 'LP', 'LZ', 'LJ', 'LE', 'ES', 'LS']
     end=False
-    true_code=False #Bool that'll indicate if the code is or isn't Schenge to the user
+    true_code=False
     while i<len(sche) and end==False:
         if code[:2]==sche[i]:
             true_code=True
@@ -20,7 +20,7 @@ def IsSchengenAirport(code):    #Function to check if the code of the input-ed a
         else:
             true_code=False
         i=i+1
-    return true_code    #The function returns the updated value of the airport Schengen(True)/not Schengen(False)
+    return true_code
 
 def SetSchengen(airport):   #Function to ask for the IsSchengenAirport to tell us if it's Schengen, and we add that value to the airport attributes
     airport.sche=IsSchengenAirport(airport.icao_code)
@@ -35,13 +35,12 @@ def PrintAirport(airport):  #Function to write all the variables from the Airpor
 
 def LoadAirport(filename):  #Function to restructure how latitude and longitude are shown in a file
     airports=[]
-    try:    #With this we can easily create the condition (similar to a while) that the code will work unless we get to an exception
+    try:
         file=open(filename, "r")
         file.readline()
         air=file.readline() #We ride two lines in one go to skip the title
         while air != "":
             info=air.split(" ")
-            #We separate the information in a vector of [code,latitude,longitude]
             code=info[0]
             lat_=info[1]
             lon_=info[2]
@@ -54,13 +53,13 @@ def LoadAirport(filename):  #Function to restructure how latitude and longitude 
                 lon=-lon
             lat=float(lat)
             lon=float(lon)
-            one_airport=Airport(code,lat,lon)    #We regroup all the information in a vector that we'll insert in the airports list (essentially creating a matrix)
+            one_airport=Airport(code,lat,lon)
             airports.append(one_airport)
             air=file.readline()
         file.close()
-    except FileNotFoundError:   #This exception indicates that if we can't find the file instead of shooting an error it just returns an empty vector
+    except FileNotFoundError:
         return []
-    return airports #The function returns the list with all the airports and their correct latitude/longitude in degrees
+    return airports
 
 def SaveSchengenAirports(airports,filename):    #Function to grab a list of airports and create a new file that only includes the Schengen ones
     new_file=open(filename,"w") #We open a new file with whatever name we've input-ed
@@ -68,13 +67,11 @@ def SaveSchengenAirports(airports,filename):    #Function to grab a list of airp
     if len(airports)>0:
         while i<len(airports):
             airport=airports[i]
-            if airport.sche==True: #We check just the codes of every airport in the list using our first function (IsSchengenAirport)
-                #We put each piece of information in a new vector to add the spaces and change of line before turning into text and putting it in
-                #the file we had previously created
+            if airport.sche==True:
                 vector_airport=[str(airport.icao_code),"\t",str(airport.latitude),"\t",str(airport.longitude),"\n"]
                 new_file.write("".join(vector_airport))
             i=i+1
-    else:   #In case there aren't any airports in the list (it's empty) we return an error message
+    else:
         print("No airports found")
     new_file.close()
     return
@@ -86,16 +83,16 @@ def AddAirport(airports,airport):   #Function to add airports to the list
         if airports[i].icao_code==airport.icao_code:
             end=True
         i=i+1
-    if end==False:  #If the condition to end the loop early isn't true it means the loop hasn't found the airport, so it's okay to add it
+    if end==False:
         airports.append(airport)
-    return airports #The function returns the updated list
+    return airports
 
 def RemoveAirport(airport,code):    #Function to delete airports from the list
     i=0
     end=False
     while i<len(airport) and end==False:
         if airport[i].icao_code==code:
-            airport.pop(i)  #The .pop eliminates that position from the vector
+            airport.pop(i)
             end=True
         i=i+1
     return airport
@@ -104,7 +101,7 @@ def PlotAirports(airports): #Function to make the graph of the Schengen vs Non-S
     i=0
     schengen=0
     while i<len(airports):
-        if airports[i].sche==True: #For every Schengen airport +1
+        if airports[i].sche==True:
             schengen=schengen+1
         i=i+1
     no_schengen=len(airports)-schengen
