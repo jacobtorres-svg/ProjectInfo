@@ -2,7 +2,7 @@ from LEBL import *
 from airport import *
 from aircraft import *
 import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
+from tkinter import filedialog, messagebox, ttk, simpledialog
 
 #---AIRPORT SECTION---
 airports_file=None  #We put the airport file as None so the default state is without any information, and we can add whatever file we want
@@ -120,7 +120,7 @@ def SetNewSchengen():   #Function to make the current airports get their Schenge
         return
     i=0
     while i<len(airports):
-        airports[i].sche=SetSchengen(airports[i])    #We call the SetSchengen from the airport to look if the airport is or isn't Schengen
+        airports[i].sche=SetSchengen(airports[i])
         i=i+1
     text_area.insert(tk.END,"Updated Schengen attribute for all airports.\n")
     text_area.see(tk.END)
@@ -145,7 +145,7 @@ def SaveSchengen(): #Function to save all the Schengen airports into a separate 
         return
     filename=filedialog.asksaveasfilename(title="Save Schengen Airports",defaultextension=".txt")
     if filename:
-        SaveSchengenAirports(airports,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
+        SaveSchengenAirports(airports,filename)
         text_area.insert(tk.END,f"Schengen airports saved to {filename}\n")
     text_area.see(tk.END)
     return
@@ -157,7 +157,7 @@ def GraphAirports():    #Function to ask for the plot to create a graph of Schen
     elif airports[0].sche==None:
         messagebox.showwarning("Input Error","No Schengen stablished.")
     else:
-        PlotAirports(airports)  #We call the PlotAirports from the airport to do the graph
+        PlotAirports(airports)
     return
 
 def ShowMap():  #Function to create the code for the Google Earth to place all the airports
@@ -165,33 +165,34 @@ def ShowMap():  #Function to create the code for the Google Earth to place all t
         messagebox.showwarning("No Data", "No airports loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save the airports",defaultextension=".kml")
-    MapAirports(airports,filename)  #We call the PlotAirports from the airport to do the graph
+    MapAirports(airports,filename)
     text_area.insert(tk.END, f"{filename} generated. Open it in Google Earth.\n")
     text_area.see(tk.END)
     return
 
 #---AIRPORT SECTION---
-arrivals_file=None  #We put the aircrafts file as None so the default state is without any information, and we can add whatever file we want
-arrivals=[] #We put the aircrafts as a list, just like it was in the aircraft
+arrivals_file=None
+arrivals=[]
 departures_file=None
 departures=[]
+merged=[]
 
 def LoadArrival():
     global arrivals,arrivals_file
-    filename=filedialog.askopenfilename(title="Select airports file")  # Similar to putting a variable=input(), we ask for the file, but searching in our files
+    filename=filedialog.askopenfilename(title="Select airports file")
     if filename:
-        arrivals=LoadArrivals(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
-        arrivals_file=filename  # We clarify, globally, that now there's a file for the airports
+        arrivals=LoadArrivals(filename)
+        arrivals_file=filename
         text_area.insert(tk.END, f"Loaded {len(arrivals)} arrivals from {filename}\n")
     text_area.see(tk.END)
     return
 
 def LoadDeparture():
     global departures,departures_file
-    filename=filedialog.askopenfilename(title="Select airports file")  # Similar to putting a variable=input(), we ask for the file, but searching in our files
+    filename=filedialog.askopenfilename(title="Select airports file")
     if filename:
-        departures=LoadDepartures(filename)  # We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
-        departures_file=filename  # We clarify, globally, that now there's a file for the airports
+        departures=LoadDepartures(filename)
+        departures_file=filename
         text_area.insert(tk.END, f"Loaded {len(departures)} departures from {filename}\n")
     text_area.see(tk.END)
     return
@@ -431,6 +432,100 @@ def AssignGates():
         return
     return
 
+
+def InterfaceOpenHourSelector():
+    """Abre la ventana con el Combobox para elegir la hora."""
+    global bcn, arrivals, departures
+
+    if bcn is None or bcn == []:
+        messagebox.showwarning("No Data", "No terminals loaded.")
+        return
+
+    # Unificamos la lista de aviones si la tienes dividida
+    all_aircrafts = arrivals + departures
+    if len(all_aircrafts) == 0:
+        messagebox.showwarning("No Data", "No aircrafts loaded.")
+        return
+
+    window = tk.Toplevel(bg="#f0f3f5")
+    window.title("Occupancy By Hour")
+
+    tk.Label(window, text="Select Hour", bg="#f0f3f5", font=("Segoe UI", 10, "bold")).pack(pady=10)
+
+    combo = ttk.Combobox(window, state="readonly")
+
+    # Construcción de la lista de horas con un 'while'
+    hours = []
+    h = 0
+    while h < 24:
+        if h < 10:
+            hour = "0" + str(h) + ":00"
+        else:
+            hour = str(h) + ":00"
+        hours.append(hour)
+        h = h + 1
+
+    combo["values"] = hours
+    combo.current(0)
+    combo.pack(pady=10)
+
+    def ShowHour():
+        import copy
+        selected = combo.get()
+
+        # Clonamos el aeropuerto en su estado inicial (vacío/noche) para simular el día
+        temp_bcn = copy.deepcopy(bcn)
+
+        # Ejecutamos la asignación hora por hora de forma cronológica hasta llegar a la seleccionada
+        idx = 0
+        while idx < len(hours):
+            AssignGatesAtTime(temp_bcn, all_aircrafts, hours[idx])
+            if hours[idx] == selected:
+                break  # Frenamos cuando llegamos a la hora elegida por el usuario
+            idx = idx + 1
+
+        # Llamamos a tu visualizador gráfico con el aeropuerto simulado en esa hora
+        AirportVisualizer(temp_bcn)
+
+    # Nota: Asegúrate de tener definida la variable o diccionario 'popup_button_style'
+    tk.Button(window, text="Show Occupancy", command=ShowHour, **popup_button_style).pack(pady=20)
+    CenterWindow(window)
+
+
+def InterfaceAssignAtTime():
+    global bcn, arrivals, departures, gate_info
+    try:
+        # Combinamos las listas de aviones que tengas cargadas
+        all_aircrafts = arrivals + departures
+
+        if bcn is None or bcn == [] or len(all_aircrafts) == 0:
+            messagebox.showwarning("No Data", "Cargue terminales y aviones primero.")
+            return
+
+        # ¡AQUÍ NACE LA HORA! Abre una ventana flotante para que el usuario la escriba
+        selected_time = simpledialog.askstring(
+            title="Asignación por Hora",
+            prompt="Introduce la hora exacta del día (Formato HH:00):",
+            initialvalue="12:00"
+        )
+
+        # Si el usuario pulsa "Cancelar" o la cierra vacía, detenemos la función
+        if not selected_time:
+            return
+        # Ejecutamos tu lógica con el aeropuerto global
+        not_assigned = AssignGatesAtTime(bcn, all_aircrafts, selected_time)
+
+        # Actualizamos la información para ShowGateInfo
+        gate_info = GateOccupancy(bcn)
+
+        # Mostramos los resultados en la consola de texto de tu pantalla principal
+        text_area.insert(tk.END, f"\n--- Procesando hora {selected_time} ---\n")
+        text_area.insert(tk.END, f"Aviones sin puerta por falta de espacio: {not_assigned}\n")
+        text_area.see(tk.END)
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Fallo al asignar por hora: {e}")
+
 def ShowGateInfo(): #Function to show all the current information from all the current airports in the list
     if len(gate_info)==0:
         messagebox.showwarning("No Data","No arrivals loaded.")
@@ -442,6 +537,19 @@ def ShowGateInfo(): #Function to show all the current information from all the c
         text_area.insert(tk.END,info)
         i=i+1
     text_area.see(tk.END)
+    return
+
+def GraphDayOccupancy():
+    # Declaramos ambas variables globales para que no falle al leerlas
+    global arrivals, departures, bcn
+    merged=MergeMovements(arrivals, departures)
+    # Validamos que tengamos tanto los aviones como la estructura del aeropuerto
+    if len(merged) == 0:
+        messagebox.showwarning(title="No Data", message="No airports or aircrafts loaded.")
+        return
+
+    # Si todo está correcto, ejecutamos la gráfica de la versión 4
+    PlotDayOccupancy(bcn, merged)
     return
 
 #---EXTRA CONTENT: VISUALIZATION OF THE GATES---
@@ -586,11 +694,10 @@ def Main(): #All the buttons, text area and details of the main interface
         "Save":[("Schengen to File", SaveSchengen), ("Arrivals to File", SaveArrivals)],
         "Add":[("Airport", lambda: AddNewAirport(secondary)), ("Aircraft", lambda: AddNewAircraft(secondary))],
         "Delete":[("Airport", lambda: DeleteAirport(secondary)), ("Aircraft", lambda: DeleteAircraft(secondary))],
-        "Show":[("Set Schengen", SetNewSchengen),("Set Gates", AssignGates),("Airport Data", ShowAirports), ("Arrivals Data", ShowArrivals),("Departures Data", ShowDepartures), ("Gate Information", ShowGateInfo)],
-        "Plots":[("Schengen/Type", GraphAirports), ("Airlines' Stats", GraphAirlines), ("Arrivals Stats", GraphFlightType),("Arrivals per Hour", GraphArrivals)],
+        "Show":[("Assign Gates at Time", lambda: InterfaceAssignAtTime),("Set Schengen", SetNewSchengen),("Set Gates", AssignGates),("Airport Data", ShowAirports), ("Arrivals Data", ShowArrivals),("Departures Data", ShowDepartures), ("Gate Information", ShowGateInfo)],
+        "Plots":[("Schengen/Type", GraphAirports), ("Airlines' Stats", GraphAirlines), ("Arrivals Stats", GraphFlightType),("Arrivals per Hour", GraphArrivals),("Occupancy during the day",GraphDayOccupancy)],
         "Earth":[("Show Airports", ShowMap), ("Show Routes", ShowMapRoute),("Show long distance Routes", ShowMapLongDistance)],
-        "Terminal":[("Airport Map", OpenOccupancyMap)]
-    }
+        "Terminal":[("Airport Map", OpenOccupancyMap),("Occupancy By Hour", InterfaceOpenHourSelector)],}
 
     def OpenMenu(click, category):
         if secondary=="active" and secondary.active.winfo_exists():    #It destroys the small pop-up if it previously existed (so that you can only open one at a time)
@@ -654,6 +761,7 @@ def Main(): #All the buttons, text area and details of the main interface
     #The actual buttons
     icons = [("📁", "Load"), ("💾", "Save"), ("✚", "Add"), ("❌", "Delete"), ("📑", "Show"), ("📈", "Plots"), ("🌍", "Earth"), ("🏢", "Terminal")]
     i=0
+
     while i<len(icons): #Putting the icons in the sidebar
         icon_text=icons[i]
         f=tk.Frame(sidebar,bg=main_color)
