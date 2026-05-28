@@ -547,8 +547,6 @@ def GraphDayOccupancy():
     if len(merged) == 0:
         messagebox.showwarning(title="No Data", message="No airports or aircrafts loaded.")
         return
-
-    # Si todo está correcto, ejecutamos la gráfica de la versión 4
     PlotDayOccupancy(bcn, merged)
     return
 
