@@ -105,8 +105,9 @@ def PlotAirports(airports): #Function to make the graph of the Schengen vs Non-S
             schengen=schengen+1
         i=i+1
     no_schengen=len(airports)-schengen
-    pyplot.bar(["Airports"],[schengen],label="Schengen")
-    pyplot.bar(["Airports"],[no_schengen],bottom= [schengen],label="No Schengen")
+    pyplot.bar(["Type"],[schengen],label="Schengen")
+    pyplot.bar(["Type"],[no_schengen],bottom= [schengen],label="No Schengen")
+    pyplot.ylabel("Airports")
     pyplot.legend()
     pyplot.show()
     return

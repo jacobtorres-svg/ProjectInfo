@@ -235,8 +235,6 @@ def FreeGate (bcn, id):
 
 def AssignGatesAtTime (bcn, aircrafts, time):
     hour = int(time.split(":")[0])
-
-    # 1. LIBERACIÓN DE PUERTAS
     i = 0
     while i < len(bcn.list_terminal):
         terminal = bcn.list_terminal[i]
@@ -252,7 +250,6 @@ def AssignGatesAtTime (bcn, aircrafts, time):
                     while l < len(aircrafts) and found == False:
                         airplane = aircrafts[l]
                         if airplane.id == gate.aircraft:
-                            # CORRECCIÓN: Si no tiene salida, o si su salida es igual o ANTERIOR a la hora actual, se libera
                             if airplane.departure is None:
                                 gate.occupancy = False
                                 gate.aircraft = None
@@ -270,8 +267,6 @@ def AssignGatesAtTime (bcn, aircrafts, time):
                 k = k + 1
             j = j + 1
         i = i + 1
-
-    # 2. ASIGNACIÓN DE NUEVOS ATERRIZAJES
     i = 0
     gateless = 0
     while i < len(aircrafts):

@@ -156,10 +156,8 @@ def PlotFlightsType(aircrafts): #Function to show how many of these arrivals are
             if not found:
                 countnosche += 1
             i += 1
-        Vx=["Schengen","No Schengen"]
-        Vy=[countsche,countnosche]
-        pyplot.bar(Vx,Vy,label="Arrivals type")
-        pyplot.xlabel("Type")
+        pyplot.bar(["Type"], [countsche], label="Schengen")
+        pyplot.bar(["Type"], [countnosche], bottom=[countsche], label="No Schengen")
         pyplot.ylabel("Arrivals")
         pyplot.legend()
         pyplot.show()
