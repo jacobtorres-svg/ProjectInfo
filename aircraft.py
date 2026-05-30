@@ -322,8 +322,7 @@ def NightAircraft (complete_flights):   #Function to indicate which airplanes st
         return []
     return night_list
 
-# test section
-if __name__ == "__main__":
+if __name__ == "__main__":  #Test area
     arrivals=LoadArrivals("Arrivals.txt")
     departures=LoadDepartures("Departures.txt")
     merge=MergeMovements(arrivals,departures)

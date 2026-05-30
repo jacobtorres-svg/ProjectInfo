@@ -27,7 +27,6 @@ def AddNewAirport(principal): #Function to have the button to ask to add a new a
     def AddAction():    #Function to actually do the work of adding the new airport
         global airports
         original_length=len(airports)
-        #We establish the code, latitude and longitude by input, and we make sure to leave out unnecessary data (ex. extra spaces at the end) with .strip()
         code=code_entry.get().strip()
         lat=lat_entry.get().strip()
         lon=lon_entry.get().strip()
@@ -35,15 +34,15 @@ def AddNewAirport(principal): #Function to have the button to ask to add a new a
             if len(list(code))!=4:
                 messagebox.showwarning("Input Error","Incorrect ICAO code.")
             elif code and lat and lon:
-                airports=AddAirport(airports,Airport(code,float(lat),float(lon)))  #We call the AddAirport from the airport to add it
+                airports=AddAirport(airports,Airport(code,float(lat),float(lon)))
                 if len(airports)==original_length:
                     messagebox.showwarning("Input Error", "That airport already exists.")
                 else:
                     text_area.insert(tk.END,f"Added airport {code}\n")
                     add_window.destroy()
-            else:   #If we don't have all the information we asked for we pop up an error message
+            else:
                 messagebox.showwarning("Input Error","All fields are required.")
-        except ValueError:  #In case of an error in the values (like inputting letters in tha latitude or longitude) show an error message
+        except ValueError:
             messagebox.showwarning("Input Error","Incorrect latitude and/or longitude.")
     text_area.see(tk.END)
     #We decorate the interface
@@ -83,7 +82,7 @@ def DeleteAirport(principal):   #Function to have the button to ask to delete an
         if len(list(code))!=4:
             messagebox.showwarning("Input Error","Incorrect ICAO code.")
         elif code:
-            airports=RemoveAirport(airports,code)   #We call the AddAirport from the airport to remove it
+            airports=RemoveAirport(airports,code)
             if len(airports)==original_length:
                 messagebox.showwarning("Input Error", "That airport doesn't exist.")
             else:
@@ -176,7 +175,7 @@ departures_file=None
 departures=[]
 merged=[]
 
-def LoadArrival():
+def LoadArrival():  #Function to load the arrivals
     global arrivals,arrivals_file,merged,departures
     filename=filedialog.askopenfilename(title="Select airports file")
     if filename:
@@ -184,11 +183,11 @@ def LoadArrival():
         arrivals_file=filename
         text_area.insert(tk.END, f"Loaded {len(arrivals)} arrivals from {filename}\n")
     text_area.see(tk.END)
-    if len(departures)!=0:
+    if len(departures)!=0:  #Condition to merge arrivals and departures in case both have been loaded
         merged=MergeMovements(arrivals,departures)
     return
 
-def LoadDeparture():
+def LoadDeparture():    #Function to load the departures
     global departures,departures_file, merged, arrivals
     filename=filedialog.askopenfilename(title="Select airports file")
     if filename:
@@ -196,11 +195,11 @@ def LoadDeparture():
         departures_file=filename
         text_area.insert(tk.END, f"Loaded {len(departures)} departures from {filename}\n")
     text_area.see(tk.END)
-    if len(arrivals)!=0:
+    if len(arrivals)!=0:    #Condition to merge arrivals and departures in case both have been loaded
         merged=MergeMovements(arrivals,departures)
     return
 
-def ShowArrivals(): #Function to show all the current information from all the current airports in the list
+def ShowArrivals(): #Function to show all the information about the arrivals
     if len(arrivals)==0:
         messagebox.showwarning("No Data","No arrivals loaded.")
         return
@@ -213,7 +212,7 @@ def ShowArrivals(): #Function to show all the current information from all the c
     text_area.see(tk.END)
     return
 
-def ShowDepartures(): #Function to show all the current information from all the current airports in the list
+def ShowDepartures(): #Function to show all the information about the departures
     if len(departures)==0:
         messagebox.showwarning("No Data","No departures loaded.")
         return
@@ -226,18 +225,18 @@ def ShowDepartures(): #Function to show all the current information from all the
     text_area.see(tk.END)
     return
 
-def SaveArrivals(): #Function to save all the Schengen airports into a separate file of our choice
+def SaveArrivals(): #Function to save all the arrivals into a separate file of our choice
     if len(arrivals)==0:
         messagebox.showwarning("No Data","No arrivals loaded.")
         return
     filename=filedialog.asksaveasfilename(title="Save Arrivals",defaultextension=".txt")
     if filename:
-        SaveFlights(arrivals,filename) #We call the SaveSchengenAirports from the airport to create and fill the new file
+        SaveFlights(arrivals,filename)
         text_area.insert(tk.END,f"Arrivals saved to {filename}\n")
     text_area.see(tk.END)
     return
 
-def GraphAirlines():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
+def GraphAirlines():    #Function to graph how many arrivals each airline has
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
@@ -248,7 +247,7 @@ def GraphAirlines():    #Function to ask for the plot to create a graph of Schen
     PlotAirlines(arrivals)
     return
 
-def GraphFlightType():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
+def GraphFlightType():    #Function to create a graph of Schengen vs Non-Schengen arrivals
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
@@ -261,7 +260,7 @@ def GraphFlightType():    #Function to ask for the plot to create a graph of Sch
         PlotFlightsType(arrivals)
     return
 
-def GraphArrivals():    #Function to ask for the plot to create a graph of Schengen vs Non-Schengen airports
+def GraphArrivals():    #Function to show how many arrivals there are per hour
     if len(airports)==0:
         messagebox.showwarning("No Data", "No airports loaded.")
         return
@@ -304,9 +303,9 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
 terminals_file=None  #We put the terminals file as None so the default state is without any information, and we can add whatever file we want
 gate_info=[] #We put the gate information as a list, just like it was in the LEBL
 bcn=[]
-map = None
+map=None
 
-def LoadTerminals():
+def LoadTerminals():    #Function to load the terminals
     global terminals_file, gate_info, bcn
     filename=filedialog.askopenfilename(title="Select terminal file")
     if filename:
@@ -317,7 +316,7 @@ def LoadTerminals():
     text_area.see(tk.END)
     return
 
-def AssignGates():
+def AssignGates():  #Function to automatically assign gates to all incoming flights (regardless of their departure time)
     global gate_info, bcn, merged, map
     try:
         if len(gate_info)==0:
@@ -342,7 +341,7 @@ def AssignGates():
         return
     return
 
-def FreeGates(principal):
+def FreeGates(principal):   #Function to free a gate by typing the id of the aircraft there's in it
     global gate_info, bcn, merged, map
     if len(gate_info) == 0:
         messagebox.showwarning("No Data", "No terminals loaded.")
@@ -353,7 +352,7 @@ def FreeGates(principal):
     elif len(merged) == 0:
         messagebox.showwarning("No Data", "No arrivals and/or departures loaded.")
         return
-    def FreeAction():
+    def FreeAction():   #Function that actually does that and automatically refreshes the map
         global bcn, gate_info, map
         aircraft_target=id_entry.get().strip()
         if not aircraft_target:
@@ -371,6 +370,7 @@ def FreeGates(principal):
             add_window.destroy()
         except ValueError:
             return
+    text_area.see(tk.END)
     #We decorate the interface
     add_window = tk.Toplevel(principal, padx=30, pady=30, bg="#f0f3f5")
     add_window.title("Free Gate")
@@ -391,7 +391,7 @@ def FreeGates(principal):
     CenterWindow(add_window)
     return
 
-def InterfaceAssignAtTime():
+def InterfaceAssignAtTime():    #Function to assign gates/look at gates at a specific time
     global secondary, bcn, merged, terminals_file
     if len(merged) == 0:
         messagebox.showwarning("No Data", "No arrivals and/or departures loaded.")
@@ -421,7 +421,7 @@ def InterfaceAssignAtTime():
     main_time_combo = ttk.Combobox(time_window, values=hours_options, state="readonly", width=10, font=("Segoe UI", 10))
     main_time_combo.set("00:00")
     main_time_combo.pack(pady=10)
-    def RunSimulation():
+    def RunSimulation():    #Function that actually does that and automatically refreshes the map
         global bcn, merged, gate_info
         selected_time = main_time_combo.get()
         gateless=AssignGatesAtTime(bcn, merged, selected_time)
@@ -436,7 +436,7 @@ def InterfaceAssignAtTime():
     time_window.after(10, lambda: CenterWindow(time_window))
     return
 
-def ShowGateInfo(): #Function to show all the current information from all the current airports in the list
+def ShowGateInfo(): #Function to show all the information of the gates that has currently been updated
     if len(merged)==0:
         messagebox.showwarning("No Data","No arrivals and/or departures loaded.")
         return
@@ -452,7 +452,7 @@ def ShowGateInfo(): #Function to show all the current information from all the c
     text_area.see(tk.END)
     return
 
-def GraphDayOccupancy():
+def GraphDayOccupancy():    #Function to show first the graph of occupancy during the day and then how many aircraft didn't get sorted (all by hour)
     global merged, bcn
     if len(merged) == 0:
         messagebox.showwarning("No Data", "No arrivals and/or departures loaded.")
@@ -527,10 +527,10 @@ class AirportVisualizer:
         while i<len(list_widgets):
             list_widgets[i].destroy()
             i=i+1
-        self.Drawing()
+        self.Drawing()  #Calling the function to "re-draw" itself, but changing the drawing
         return
 
-    def ChangeHour(self, event):
+    def ChangeHour(self, event):    #Function to change the hour in the map (which automatically updates it)
         global merged 
         selected_time = self.time_combo.get()
         AssignGatesAtTime(self.airport, merged, selected_time)
@@ -539,7 +539,7 @@ class AirportVisualizer:
         while i<len(list_widgets):
             list_widgets[i].destroy()
             i=i+1
-        self.Drawing()
+        self.Drawing()  #Calling the function to "re-draw" itself so it updates
         return
 
     def Drawing(self):  #Function that actually creates the drawing of the gates
@@ -588,7 +588,7 @@ class AirportVisualizer:
         self.canvas.config(scrollregion=(0, 0,width,height))
         return
 
-def OpenOccupancyMap():
+def OpenOccupancyMap(): #Function to actually call the whole AirportVisualizer class to open the map
     global bcn, map
     if len(gate_info)==0:
         messagebox.showwarning("No Data", "No terminals loaded.")
@@ -634,7 +634,7 @@ def Main(): #All the buttons, text area and details of the main interface
         "Earth":[("Show Airports", ShowMap), ("Show Routes", ShowMapRoute),("Show long distance Routes", ShowMapLongDistance)],
         "Terminal":[("Airport Map", OpenOccupancyMap)],}
 
-    def OpenMenu(click, category):
+    def OpenMenu(click, category):  #Function to open the small "menu" when clicking the icons
         if secondary=="active" and secondary.active.winfo_exists():    #It destroys the small pop-up if it previously existed (so that you can only open one at a time)
             secondary.active.destroy()
         #The pop-up

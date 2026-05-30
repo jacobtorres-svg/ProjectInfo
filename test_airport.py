@@ -1,11 +1,14 @@
 from airport import *
-airport=Airport("qqqq",41.1749,2.0442)
-IsSchengenAirport(airport.icao_code)
-SetSchengen(airport)
-PrintAirport(airport)
-LoadAirport("Airports.txt")
-SaveSchengenAirports(LoadAirport("Airports.txt"),"Schengen_airports.txt")
-print(AddAirport("Airports.txt",airport))
-print(RemoveAirport("Airports.txt",airport.icao_code))
-PlotAirports(LoadAirport("Airports.txt"))
-MapAirports(LoadAirport("Airports.txt"),"file.kml")
+list_test = [Airport("LEBL", 41.297, 2.078),Airport("LFPG", 49.009, 2.547),Airport("KJFK", 40.639, -73.778)]
+i=0
+while i<len(list_test):
+    SetSchengen(list_test[i])
+    print(PrintAirport(list_test[i]))
+    i=i+1
+new_airport = Airport("EDDF", 50.033, 8.570)
+SetSchengen(new_airport)
+AddAirport(list_test, new_airport)
+repeated = Airport("LEBL", 41.0, 2.0)
+AddAirport(list_test, repeated)
+RemoveAirport(list_test, "LEBL")
+PlotAirports(list_test)
