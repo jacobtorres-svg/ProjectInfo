@@ -15,6 +15,6 @@
 
   <a href="https://drive.google.com/file/d/146ZG4rBdLoMVzKdD20encpU5-y7WF73r/view?usp=sharing" class="video">Click to go to the video of our version 2.0!</a>
 
-  <a href="https://drive.google.com/file/d/1fhKtsu5Hu1tcszpcnm8cHXq2RiUSJ6rW/view?usp=sharing" class="video">Click to go to the video of our version 2.0!</a>
+  <a href="https://drive.google.com/file/d/1fhKtsu5Hu1tcszpcnm8cHXq2RiUSJ6rW/view?usp=sharing" class="video">Click to go to the video of our version 3.0!</a>
  
 </div>
