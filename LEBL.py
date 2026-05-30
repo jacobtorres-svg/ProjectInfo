@@ -207,7 +207,7 @@ def AssignNightGates (bcn, aircrafts):  #Function to pre-assign some gates as oc
     except Exception:
         return "error"
 
-def FreeGate (bcn, id):
+def FreeGate (bcn, id): #Function to free an occupied gate
     try:
         i=0
         j=0
@@ -227,9 +227,9 @@ def FreeGate (bcn, id):
                 j=j+1
             i=i+1
         if found == False:
-            return "Aircraft not found."
+            return found
         else:
-            return
+            return found
     except:
         return "Error in FreeGate."
 

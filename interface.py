@@ -318,7 +318,7 @@ def LoadTerminals():
     return
 
 def AssignGates():
-    global gate_info, bcn, arrivals, map
+    global gate_info, bcn, merged, map
     try:
         if len(gate_info)==0:
             messagebox.showwarning("No Data","No terminals loaded.")
@@ -326,8 +326,8 @@ def AssignGates():
         elif airports[0].sche==None:
             messagebox.showwarning("No Data","No Schengen value established.")
             return
-        elif len(gate_info)==0:
-            messagebox.showwarning("No Data","No arrivals loaded.")
+        elif len(merged)==0:
+            messagebox.showwarning("No Data","No arrivals and/or departures loaded.")
             return
         i=0
         while i<len(arrivals):
@@ -340,6 +340,55 @@ def AssignGates():
             map.ChangeTerminals(map.updated)
     except ValueError:
         return
+    return
+
+def FreeGates(principal):
+    global gate_info, bcn, merged, map
+    if len(gate_info) == 0:
+        messagebox.showwarning("No Data", "No terminals loaded.")
+        return
+    elif airports[0].sche == None:
+        messagebox.showwarning("No Data", "No Schengen value established.")
+        return
+    elif len(merged) == 0:
+        messagebox.showwarning("No Data", "No arrivals and/or departures loaded.")
+        return
+    def FreeAction():
+        global bcn, gate_info, map
+        aircraft_target=id_entry.get().strip()
+        if not aircraft_target:
+            messagebox.showwarning("Warning", "Please enter a gate name.")
+            return
+        try:
+            found=FreeGate(bcn, aircraft_target)
+            if found == False:
+                messagebox.showwarning("No Data", f"Aircraft [{aircraft_target}] is not in any gate.")
+            else:
+                text_area.insert(tk.END, f"Aircraft [{aircraft_target}] has been successfully freed from its gate.\n")
+                text_area.see(tk.END)
+                if 'map' in globals() and map and map.root.winfo_exists():
+                    map.ChangeTerminals(map.updated)
+            add_window.destroy()
+        except ValueError:
+            return
+    #We decorate the interface
+    add_window = tk.Toplevel(principal, padx=30, pady=30, bg="#f0f3f5")
+    add_window.title("Free Gate")
+    #main interface
+    main_frame = tk.Frame(add_window, bg="#f0f3f5")
+    main_frame.pack(expand=True)
+    #repetitive style
+    lbl_style = {"bg": "#f0f3f5", "font": ("Segoe UI", 10)}
+    entry_style = {"font": ("Segoe UI", 10), "justify": "center"}
+    #input of information
+    tk.Label(main_frame, text="Enter the aircraft id you want to free", **lbl_style).pack()
+    id_entry = tk.Entry(main_frame, **entry_style)
+    id_entry.pack(pady=(0, 20))
+    id_entry.focus_set()
+    #the button
+    tk.Button(main_frame, text="Free aircraft", command=FreeAction, **popup_button_style).pack()
+    #center at the start
+    CenterWindow(add_window)
     return
 
 def InterfaceAssignAtTime():
@@ -580,7 +629,7 @@ def Main(): #All the buttons, text area and details of the main interface
         "Save":[("Save Schengen to File", SaveSchengen), ("Save Arrivals to File", SaveArrivals)],
         "Modify":[("Add Airport", lambda: AddNewAirport(secondary)),("Delete Airport", lambda: DeleteAirport(secondary))],
         "Show":[("Airport Data", ShowAirports), ("Arrivals Data", ShowArrivals),("Departures Data", ShowDepartures)],
-        "Dynamic": [("Assign Gates at Time", InterfaceAssignAtTime),("Gate Information", ShowGateInfo)],
+        "Dynamic": [("Assign Gates at Time", InterfaceAssignAtTime),("Gate Information", ShowGateInfo),("Free Gate",lambda: FreeGates(secondary))],
         "Plots":[("Schengen/Type", GraphAirports), ("Airlines' arrivals Stats", GraphAirlines), ("Arrivals Stats", GraphFlightType),("Arrivals per Hour", GraphArrivals),("Occupancy and Unassigned aircrafts during the day",GraphDayOccupancy)],
         "Earth":[("Show Airports", ShowMap), ("Show Routes", ShowMapRoute),("Show long distance Routes", ShowMapLongDistance)],
         "Terminal":[("Airport Map", OpenOccupancyMap)],}
