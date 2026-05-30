@@ -75,37 +75,6 @@ def SaveFlights(aircrafts, filename):   #Function to save all the arrivals after
     new_file.close()
     return
 
-def AddAircraft(aircrafts, new_aircraft):   #Function to add an arrival
-    i=0
-    end=False
-    while i<len(aircrafts) and end==False:
-        if aircrafts[i].id==new_aircraft.id and aircrafts[i].landing==new_aircraft.landing:
-            end=True
-        i=i+1
-    if end==True:
-        return aircrafts
-    end=False
-    position=0
-    while position<len(aircrafts) and end==False:
-        if new_aircraft.landing<aircrafts[position].landing:
-            aircrafts.insert(position,new_aircraft)
-            end=True
-        position=position+1
-    if end==False:
-        aircrafts.append(new_aircraft)
-    return aircrafts
-
-def RemoveAircraft(aircrafts, landing_time, extra_info):    #Function to remove an arrival
-    i=0
-    found=False
-    while i<len(aircrafts) and found==False:
-        if aircrafts[i].landing==landing_time:
-            if (aircrafts[i].id == extra_info or aircrafts[i].icao_origin==extra_info or aircrafts[i].icao_airline==extra_info):
-                aircrafts.pop(i)
-                found=True
-        i=i+1
-    return aircrafts
-
 def PlotAirlines(aircrafts):    #Function to see the number of arrivals each airline has
     try:
         Vx=[]
