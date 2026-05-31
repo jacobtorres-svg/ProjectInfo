@@ -5,8 +5,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk, simpledialog
 
 #---AIRPORT SECTION---
-airports_file=None  #We put the airport file as None so the default state is without any information, and we can add whatever file we want
-airports=[] #We put the airports as a list, just like it was in the airport
+airports_file=None
+airports=[]
 #important button for aesthetics in the pop-ups
 popup_button_style = {"bg": "#2c3e50","fg": "white","activebackground": "#34495e","activeforeground": "white","font": ("Segoe UI", 10, "bold"),"relief": "flat","width": 15,"cursor": "hand2"}
 
@@ -426,7 +426,7 @@ def InterfaceAssignAtTime():    #Function to assign gates/look at gates at a spe
         selected_time = main_time_combo.get()
         gateless=AssignGatesAtTime(bcn, merged, selected_time)
         gate_info=GateOccupancy(bcn)
-        text_area.insert(tk.END, f"Gates have been updated to [{selected_time}].\nThere are {gateless} aircrafts waiting for an available gate\n")
+        text_area.insert(tk.END, f"Gates have been updated to [{selected_time}].\nThere are {gateless} aircrafts waiting for an available gate.\n")
         text_area.see(tk.END)
         if 'map' in globals() and map and tk.Toplevel.winfo_exists(map.root):
             map.ChangeTerminals(map.updated)

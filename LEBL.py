@@ -209,15 +209,15 @@ def AssignNightGates (bcn, aircrafts):  #Function to pre-assign some gates as oc
 def FreeGate (bcn, id): #Function to free an occupied gate
     try:
         i=0
-        j=0
-        k=0
         found = False
-        while i < len(bcn.list_terminal) and found==False:
-            terminal = bcn.list_terminal[i]
-            while j < len(terminal.list_obj) and found==False:
-                area = terminal.list_obj[j]
-                while k < len(area.gate_list) and found==False:
-                    gate = area.gate_list[k]
+        while i<len(bcn.list_terminal) and found==False:
+            terminal=bcn.list_terminal[i]
+            j=0
+            while j<len(terminal.list_obj) and found==False:
+                area=terminal.list_obj[j]
+                k=0
+                while k<len(area.gate_list) and found==False:
+                    gate=area.gate_list[k]
                     if gate.aircraft==id:
                         found=True
                         gate.aircraft="-"
@@ -353,7 +353,6 @@ if __name__ == "__main__":  #Test area
         if assign != -1 and not isinstance(assign, str):
             print("it's", PrintOccupancy(assign))
             print(f"Airline {a.icao_airline} assigned to {assign.name}")
-
     departures=LoadDepartures("Departures.txt")
     merged=MergeMovements(arrivals,departures)
     night=NightAircraft(merged)
@@ -362,10 +361,8 @@ if __name__ == "__main__":  #Test area
         if assign != -1 and not isinstance(assign, str):
             print("it's", PrintOccupancy(assign))
             print(f"Airline {n.icao_airline} assigned to {assign.name}")
-
     free=FreeGate(airport,"ECMKV")
     print(free)
-
     assign_time=AssignGatesAtTime(airport, merged, "18:00")
     print(assign_time)
     print(PlotDayOccupancy(airport,merged))
