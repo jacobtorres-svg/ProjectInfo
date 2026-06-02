@@ -12,10 +12,10 @@ popup_button_style = {"bg": "#2c3e50","fg": "white","activebackground": "#34495e
 
 def LoadAirports(): #Function to ask for the file to load the airports we have available
     global airports,airports_file
-    filename=filedialog.askopenfilename(title="Select airports file")   #Similar to putting a variable=input(), we ask for the file, but searching in our files
+    filename=filedialog.askopenfilename(title="Select airports file")
     if filename:
-        airports=LoadAirport(filename)  #We call the LoadAirport from the airport to give us the list we knew (and still know here) as airports
-        airports_file=filename  #We clarify, globally, that now there's a file for the airports
+        airports=LoadAirport(filename)
+        airports_file=filename
         text_area.insert(tk.END, f"Loaded {len(airports)} airports from {filename}\n")
     text_area.see(tk.END)
     return
@@ -300,8 +300,8 @@ def ShowMapLongDistance():  #Function to create the code for the Google Earth to
     return
 
 #---LEBL SECTION---
-terminals_file=None  #We put the terminals file as None so the default state is without any information, and we can add whatever file we want
-gate_info=[] #We put the gate information as a list, just like it was in the LEBL
+terminals_file=None
+gate_info=[]
 bcn=[]
 map=None
 

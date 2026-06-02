@@ -62,7 +62,7 @@ def PlotArrivals (aircrafts):   #Function to show the amount of arrivals every h
     return
 
 def SaveFlights(aircrafts, filename):   #Function to save all the arrivals after being processed properly
-    new_file=open(filename, "w")  # We open a new file with whatever name we've input-ed
+    new_file=open(filename, "w")
     i=0
     if len(aircrafts)>0:
         while i<len(aircrafts):
@@ -70,7 +70,7 @@ def SaveFlights(aircrafts, filename):   #Function to save all the arrivals after
             vector_aircrafts=[info.id,"\t",info.icao_origin,"\t",info.landing,"\t",info.icao_airline,"\n"]
             new_file.write("".join(vector_aircrafts))
             i=i+1
-    else:  # In case there aren't any airports in the list (it's empty) we return an error message
+    else:
         print("No aircrafts found")
     new_file.close()
     return

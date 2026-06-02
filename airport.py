@@ -38,7 +38,7 @@ def LoadAirport(filename):  #Function to restructure how latitude and longitude 
     try:
         file=open(filename, "r")
         file.readline()
-        air=file.readline() #We ride two lines in one go to skip the title
+        air=file.readline()
         while air != "":
             info=air.split(" ")
             code=info[0]
@@ -62,7 +62,7 @@ def LoadAirport(filename):  #Function to restructure how latitude and longitude 
     return airports
 
 def SaveSchengenAirports(airports,filename):    #Function to grab a list of airports and create a new file that only includes the Schengen ones
-    new_file=open(filename,"w") #We open a new file with whatever name we've input-ed
+    new_file=open(filename,"w")
     i=0
     if len(airports)>0:
         while i<len(airports):
